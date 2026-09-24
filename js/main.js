@@ -1497,6 +1497,40 @@ const revealer = new IntersectionObserver(entries => {
     });
 }, { threshold: .1, rootMargin: "0px 0px -40px 0px" });
 
+/* ---------- Depth on scroll & dark panels ---------- */
+(function depth() {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    // background drawings drift slightly slower than the page
+    const layers = $$(".has-bg");
+    let ticking = false;
+    function update() {
+        ticking = false;
+        const vh = window.innerHeight;
+        layers.forEach(el => {
+            const r = el.getBoundingClientRect();
+            if (r.bottom < -200 || r.top > vh + 200) return;
+            const progress = (r.top + r.height / 2 - vh / 2) / vh; // -1 … 1 around the centre of the screen
+            el.style.setProperty("--py", (progress * -36).toFixed(1) + "px");
+        });
+    }
+    window.addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+    window.addEventListener("resize", update);
+    update();
+
+    // dark panels open up gently when they come into view
+    const panels = $$(".section--dark");
+    panels.forEach(p => p.classList.add("will-rise"));
+    const io = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+            if (!e.isIntersecting) return;
+            e.target.classList.add("in-view");
+            io.unobserve(e.target);
+        });
+    }, { threshold: .08 });
+    panels.forEach(p => io.observe(p));
+})();
+
 /* ---------- Init ---------- */
 renderChips();
 renderQuote();

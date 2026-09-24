@@ -2362,3 +2362,58 @@ body.is-locked .wa { display: none; }
 .modal { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: 16px; }
 .modal[hidden] { display: none; }
 .modal__backdrop { position: absolute; inset: 0; background: rgba(14, 15, 17, .72); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); animation: fade .3s both; }
+
+/* ==========================================================
+   Continuity between sections
+   - grey sections fade in and out of the page background
+   - dark sections, banner and footer become rounded panels
+   - background drawings stay inside their section and move
+     slightly with the scroll (see js: "Depth on scroll")
+   ========================================================== */
+:root { --slab-gap: clamp(8px, 1.3vw, 20px); --slab-r: clamp(22px, 2.8vw, 40px); }
+
+#systems { border-top: 0; }
+
+/* soft grey bands, no hard edge */
+.section--alu {
+    background: linear-gradient(180deg, var(--bg) 0, var(--alu) 160px, var(--alu) calc(100% - 160px), var(--bg) 100%);
+}
+
+/* dark panels */
+.section--dark {
+    margin: 28px var(--slab-gap);
+    border-radius: var(--slab-r);
+    transform-origin: 50% 0;
+    transition: transform 1s var(--ease);
+}
+.section--dark.will-rise { transform: scale(.965) translateY(24px); }
+.section--dark.will-rise.in-view { transform: none; }
+
+/* banner and footer share the same rounded language */
+.banner { border-radius: 0 0 var(--slab-r) var(--slab-r); }
+.footer { margin-top: 28px; border-radius: var(--slab-r) var(--slab-r) 0 0; }
+
+/* the grid fades at both ends instead of stopping on the section edge */
+.bg-tile::before {
+    mask-image: linear-gradient(180deg, transparent 0, #000 22%, #000 45%, transparent 82%);
+    -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 22%, #000 45%, transparent 82%);
+}
+
+/* drawings kept inside their section (no cut at the top / bottom edge) */
+.bg-elevation::before { bottom: 48px; left: -70px; }
+.bg-profile::before { bottom: 48px; left: -60px; }
+.bg-elevation-dark::before { bottom: 40px; left: 10px; }
+
+/* depth on scroll */
+.has-bg::before, .has-bg::after { transform: translate3d(0, var(--py, 0px), 0); will-change: transform; }
+.bg-tile::before { transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+    .section--dark.will-rise { transform: none; }
+    .has-bg::before, .has-bg::after { transform: none; }
+}
+@media (max-width: 640px) {
+    .section--dark { margin: 16px var(--slab-gap); }
+    .section--alu { background: linear-gradient(180deg, var(--bg) 0, var(--alu) 90px, var(--alu) calc(100% - 90px), var(--bg) 100%); }
+    .footer { margin-top: 16px; }
+}
