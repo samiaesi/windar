@@ -7,66 +7,94 @@
 /* PRODUCT CATEGORIES — the product families (lines) Windar sells, aligned with the MASTER Italy catalogue.
    key      : family name; PRODUCTS use it in "category"
    icon     : i-window, i-door, i-sliding, i-facade, i-auto, i-handle, i-corner, i-lock, i-hinge, i-box
-   image    : optional picture of the family (product shot on grey, or a photo with photo: true)
+   image    : optional picture of the family (product shot on white, or a photo with photo: true)
    lines    : the product lines / sub-families shown on the card
    badge    : optional label on the card, e.g. "Best seller", "New"
    catalogue: link to this family in the MASTER online catalogue
    Families appear in the order written here: put the ones you sell most first. */
+const MASTER_IMG = "https://www.masteritaly.com/catalogo/en/thumbnail/get/320_320/";
+const MASTER_PAGE = "https://www.masteritaly.com/catalogo/en/shop/product/";
+
 const SYSTEMS = {
     "Window Line": {
-        icon: "i-window", image: "assets/img/p-lock-2.jpg",
-        text: "Hardware for casement and tilt & turn aluminium windows.",
-        lines: ["Casement", "Tilt & turn", "Friction stays", "Locking points"],
+        icon: "i-window", image: MASTER_IMG + "3420F_1.jpg",
+        text: "Tilt & turn and casement hardware for aluminium windows.",
+        lines: ["WEEN", "2.0", "Locking points", "Lever bolts"],
         catalogue: "https://www.masteritaly.com/catalogo/shop/finestra/"
     },
+    "Handle Line": {
+        icon: "i-handle", image: MASTER_IMG + "6008.jpg",
+        text: "Cremone bolts and handles for windows, doors and sliding sashes.",
+        lines: ["ITALIA", "COMFORT", "Offset handles"],
+        catalogue: "https://www.masteritaly.com/catalogo/shop/maniglie/"
+    },
     "Sliding Line": {
-        icon: "i-sliding", image: "assets/img/p-handle-1.jpg",
-        text: "Units, trolleys and locks for sliding and lift & slide systems.",
-        lines: ["Sliding units", "Trolleys", "Sliding locks"],
+        icon: "i-sliding", image: MASTER_IMG + "6601_1.jpg",
+        text: "Sliding units, lift & slide and parallel sliding systems.",
+        lines: ["MIDKIT 90", "AS300 lift & slide", "SP160"],
         catalogue: "https://www.masteritaly.com/catalogo/shop/scorrevoli/"
     },
     "Corner Joint Line": {
-        icon: "i-corner", image: "assets/img/p-lock-1.jpg",
-        text: "Corner joints and alignment brackets for aluminium frames.",
-        lines: ["Corner joints", "Alignment brackets"],
+        icon: "i-corner", image: MASTER_IMG + "0371.jpg",
+        text: "Die-cast and extruded corner joints for aluminium frames.",
+        lines: ["Pressofusa", "Estrusa"],
         catalogue: "https://www.masteritaly.com/catalogo/shop/squadrette/"
     },
     "Door Line": {
-        icon: "i-door",
-        text: "Hinges and locking hardware for aluminium doors.",
-        lines: ["Door hinges", "Door locking"],
+        icon: "i-door", image: MASTER_IMG + "8010.jpg",
+        text: "Hinges and hardware for aluminium doors.",
+        lines: ["DINAMIKA hinges"],
         catalogue: "https://www.masteritaly.com/catalogo/shop/porte/"
-    },
-    "Handle Line": {
-        icon: "i-handle",
-        text: "Handles designed for aluminium window, door and sliding profiles.",
-        lines: ["Window handles", "Door handles", "Sliding handles"],
-        catalogue: "https://www.masteritaly.com/catalogo/shop/maniglie/"
     },
     "Automation Line": {
         icon: "i-auto", image: "assets/img/news-wislide.jpg", photo: true, badge: "New · WiSlide 230V",
-        text: "Motorised solutions for sliding systems and shutters.",
-        lines: ["WiSlide actuators"],
+        text: "Electric actuators for sliding frames, transoms and projecting windows.",
+        lines: ["WISLIDE", "CLOUD"],
         catalogue: "https://www.masteritaly.com/catalogo/shop/automazione/"
     },
     "Curtain Wall Line": {
-        icon: "i-facade",
-        text: "Accessories for aluminium façades and curtain walls.",
-        lines: ["Façade hardware"],
+        icon: "i-facade", image: MASTER_IMG + "6006.jpg",
+        text: "EMPIRE hardware for opening vents in aluminium curtain walls.",
+        lines: ["EMPIRE handles", "Corner drives"],
         catalogue: "https://www.masteritaly.com/catalogo/shop/facciata/"
     }
 };
 const MASTER_CATALOGUE = "https://www.masteritaly.com/catalogo/en/";
 
-/* PRODUCTS — the references Windar sells.
-   bestseller: true → shown first with a "Best seller" badge (choose your best sellers in the Gulf). */
+/* PRODUCTS — a selection from the MASTER Italy catalogue (codes, names and descriptions as published).
+   img  : file name of the MASTER catalogue picture (or a full URL / local path)
+   page : end of the product page address in the MASTER catalogue
+   bestseller: true → shown first with a "Best seller" badge (to set with your real best sellers in the Gulf). */
 const PRODUCTS = [
-    { category: "Corner Joint Line", name: "Extra alignment corner bracket with eccentrics", ref: "2432", img: "assets/img/p-lock-1.jpg", link: "https://www.masteritaly.com/catalogo/shop/product/2432-extra-squadretta-di-allineamento-con-eccentrici", bestseller: true },
-    { category: "Window Line",       name: "WEEN additional locking points",                 ref: "1747", img: "assets/img/p-sliding-1.jpg", link: "https://www.masteritaly.com/catalogo/shop/finestra/", bestseller: true },
-    { category: "Window Line",       name: "Friction stays",                                 ref: "LK-002", img: "assets/img/p-lock-2.jpg", link: "https://www.masteritaly.com/catalogo/shop/finestra/" },
-    { category: "Sliding Line",      name: "Key bolt for sliding doors",                     ref: "1867", img: "assets/img/p-handle-1.jpg", link: "https://www.masteritaly.com/catalogo/shop/scorrevoli/" },
-    { category: "Sliding Line",      name: "Stop blocks",                                    ref: "LK-003", img: "assets/img/p-lock-3.jpg", link: "https://www.masteritaly.com/catalogo/shop/scorrevoli/" }
-];
+    { category: "Window Line", ref: "3451LG.1", name: "WEEN tilt & turn sash, 140 kg", desc: "Extruded aluminium hinges, 140 kg capacity", img: "3420F_1.jpg", page: "590-ween-tilt-and-turn-sash-ween-erre-140-kg" },
+    { category: "Window Line", ref: "3421.32", name: "WEEN additional locking points", desc: "Zamak, stainless steel screws", img: "2058-ween-punti-di-chiusura-supplementare-ween-erre-40-570-3421_32.jpg", page: "570-ween-additional-locking-points-ween-erre-40" },
+    { category: "Window Line", ref: "3522.32", name: "2.0 tilt & turn sash", desc: "Zamak retainers, stainless steel screws", img: "3521_32.jpg", page: "623-2-0-2-0-duepuntozero-tilt-and-turn-sash-new-nc40" },
+    { category: "Window Line", ref: "4515.15", name: "BI-HID two-way lever bolt", desc: "For side-by-side sash · CE", img: "4515_15.jpg", page: "829-bi-hid-two-way-lever-bolt-for-side-by-side-sash-ce" },
+
+    { category: "Handle Line", ref: "6018", name: "ITALIA cremone bolt", desc: "Die-cast aluminium, anti-false manoeuvre", img: "6008.jpg", page: "913-italia-cremone-bolt" },
+    { category: "Handle Line", ref: "6108", name: "COMFORT cremone bolt, removable handle", desc: "Die-cast aluminium", img: "2072-comfort-cremonese-con-manico-asportabile-963-6108.jpg", page: "963-comfort-cremone-bolt-with-removable-handle" },
+    { category: "Handle Line", ref: "3073", name: "ITALIA handle", desc: "Die-cast aluminium, 100 mm body", img: "3073.jpg", page: "385-italia-handle" },
+    { category: "Handle Line", ref: "3076.1D", name: "COMFORT offset handle", desc: "Zamak with delrin bushes, 46 mm projection", img: "3076_1D.jpg", page: "399-comfort-offset-handle" },
+
+    { category: "Sliding Line", ref: "6601.1", name: "MIDKIT 90 assembly kit", desc: "Rollers rated 90 kg per sash", img: "6601_1.jpg", page: "1273-midkit-90-assembly-kit" },
+    { category: "Sliding Line", ref: "6733.28", name: "AS300 lift & slide cremone bolt kit", desc: "Retractable hooks, L 2800 mm, 3 locking points", img: "6732_25.jpg", page: "1447-as300-lift-and-slide-system-cremone-bolt-kit-with-retractable-hooks" },
+    { category: "Sliding Line", ref: "3920.2", name: "SP160 perimeter locking kit", desc: "Semi-automatic, zamak parts · parallel sliding", img: "3090_1.jpg", page: "710-sp160-perimeter-locking-kit" },
+
+    { category: "Corner Joint Line", ref: "0371", name: "Pressofusa corner joint", desc: "Die-cast aluminium, internal / external buttons", img: "0371.jpg", page: "72-pressofusa-corner-joint-with-internal-external-buttons" },
+    { category: "Corner Joint Line", ref: "0477.2", name: "Estrusa T and cross joint", desc: "Extruded aluminium, height 14 mm", img: "0477_2.jpg", page: "98-estrusa-t-and-cross-joint" },
+
+    { category: "Door Line", ref: "8014", name: "DINAMIKA door hinge", desc: "2-flap, centre distance 93 mm", img: "8010.jpg", page: "1637-dinamika-door-hinge" },
+
+    { category: "Automation Line", ref: "1122.5", name: "WISLIDE electric actuator", desc: "Rotating belt, sash up to 500 kg, 24 V", img: "1122.5D.jpg", page: "159-wislide-electric-actuator-with-rotating-belt" },
+    { category: "Automation Line", ref: "1120.1", name: "CLOUD chain actuator", desc: "Transom and projecting frames, 230 V", img: "1120_1.jpg", page: "122-cloud-chain-actuator" },
+
+    { category: "Curtain Wall Line", ref: "6006", name: "EMPIRE cremone bolt handle", desc: "Aluminium body, 2 sliders, 44 mm projection", img: "6006.jpg", page: "888-empire-accessories-for-curtain-walls-opening-perimeter-locks" },
+    { category: "Curtain Wall Line", ref: "1252.12", name: "EMPIRE corner drive", desc: "Eccentric pin, brass ferrule", img: "1252_12.jpg", page: "193-empire-corner-drive-with-setscrews" }
+].map(p => ({
+    ...p,
+    img: /^(https?:|assets\/)/.test(p.img) ? p.img : MASTER_IMG + p.img,
+    link: p.link || MASTER_PAGE + p.page
+}));
 
 /* SALES TEAM
    area     : what the person covers (shown on the site)
@@ -826,7 +854,7 @@ function renderProducts() {
     const q = state.query.trim().toLowerCase();
     const list = PRODUCTS.filter(p =>
         (state.cat === "all" || p.category === state.cat) &&
-        (!q || `${p.name} ${p.ref} ${p.category}`.toLowerCase().includes(q))
+        (!q || `${p.name} ${p.ref} ${p.category} ${p.desc || ""}`.toLowerCase().includes(q))
     ).sort((a, b) => !!b.bestseller - !!a.bestseller);
 
     $("#productResults").textContent =
@@ -848,16 +876,17 @@ function renderProducts() {
         return `
         <article class="product" style="animation-delay:${i * 60}ms">
             <div class="product__media">
-                <img src="${esc(p.img)}" alt="${esc(p.name)}" loading="lazy">
+                <img src="${esc(p.img)}" alt="${esc(p.name)}" loading="lazy" onerror="this.style.visibility='hidden'">
                 <span class="product__ref">${esc(p.ref)}</span>
                 ${p.bestseller ? `<span class="product__badge">Best seller</span>` : ""}
             </div>
             <div class="product__body">
                 <span class="product__cat">${esc(p.category)}</span>
                 <h3>${esc(p.name)}</h3>
+                ${p.desc ? `<p class="product__desc">${esc(p.desc)}</p>` : ""}
                 <button class="product__tech" data-request="technical" data-topic="Choosing the right product" data-reference="${esc(p.ref)}">${icon("i-tool")} Technical question</button>
                 <div class="product__actions">
-                    <a class="btn btn--line" href="${esc(p.link)}" target="_blank" rel="noopener">Datasheet ${icon("i-out")}</a>
+                    <a class="btn btn--line" href="${esc(p.link)}" target="_blank" rel="noopener">Details ${icon("i-out")}</a>
                     <button class="btn btn--dark product__add${added ? " is-added" : ""}" data-ref="${esc(p.ref)}" aria-pressed="${added}">
                         ${added ? icon("i-check") + "In quote" : icon("i-plus") + "Quote"}
                     </button>
