@@ -2,12 +2,11 @@
   <!-- TB-25 slim sliding pictogram: elevation (top) and plan of the two tracks (bottom) -->
   <!-- elevation: outer frame -->
   <rect x="40" y="52" width="210" height="140" stroke-width="3"/>
-  <!-- back panel and front panel, overlapping at the slim interlock -->
-  <rect x="48" y="60" width="106" height="124" stroke-width="1.6"/>
-  <rect x="136" y="60" width="106" height="124" stroke-width="2.2" fill="#ffffff" fill-opacity=".55"/>
-  <path d="M145 60v124" stroke-width="4"/>
+  <!-- two panels meeting at one slim interlock -->
+  <rect x="48" y="60" width="194" height="124" stroke-width="1.8"/>
+  <rect x="141" y="56" width="8" height="132" fill="#16408f" stroke="none" rx="1.5"/>
   <!-- glass reflections -->
-  <path d="M62 150l26-26M62 164l40-40M176 150l26-26M176 164l40-40" stroke-width="1.2" opacity=".45"/>
+  <path d="M62 150l26-26M62 164l40-40M170 150l26-26M170 164l40-40" stroke-width="1.2" opacity=".45"/>
   <!-- sliding arrows -->
   <path d="M70 100h46M108 93l8 7-8 7" stroke-width="2.4"/>
   <path d="M222 100h-46M184 93l-8 7 8 7" stroke-width="2.4"/>
