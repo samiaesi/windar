@@ -2533,4 +2533,13 @@ body.is-locked .wa { display: none; }
     .sys__actions .btn { width: 100%; }
 }
 
-.sys__detail--picto { object-fit: contain; padding: 6px; }
+
+/* Brital cards: drawn pictograms on a blueprint grid */
+.sys__media--picto {
+    background:
+        linear-gradient(rgba(22, 64, 143, .07) 1px, transparent 1px) 0 0 / 22px 22px,
+        linear-gradient(90deg, rgba(22, 64, 143, .07) 1px, transparent 1px) 0 0 / 22px 22px,
+        #f3f6fc;
+}
+.sys__media--picto > img:first-child { object-fit: contain; padding: 4% 3%; }
+.sys:hover .sys__media--picto > img:first-child { transform: scale(1.02); }
