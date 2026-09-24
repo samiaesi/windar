@@ -777,6 +777,10 @@
 <div class="reader" id="reader" role="dialog" aria-modal="true" aria-labelledby="readerTitle" hidden>
     <div class="reader__bar">
         <p class="reader__title" id="readerTitle"><small>MASTER Italy</small>Technical catalogue</p>
+        <div class="reader__mode" role="group" aria-label="View">
+            <button type="button" data-mode="book" aria-pressed="true"><svg><use href="#i-book"/></svg> Book</button>
+            <button type="button" data-mode="scroll" aria-pressed="false"><svg><use href="#i-list"/></svg> Scroll</button>
+        </div>
         <label class="reader__chapters">
             <span class="sr-only">Go to a chapter</span>
             <select id="readerChapter"></select>
@@ -794,6 +798,10 @@
         <button class="round reader__close" data-close-reader aria-label="Close the catalogue"><svg><use href="#i-x"/></svg></button>
     </div>
     <div class="reader__view" id="readerView" tabindex="-1">
+        <div class="book" id="readerBook" aria-label="Catalogue pages: click or swipe to turn">
+            <div class="book__page book__page--left"></div>
+            <div class="book__page book__page--right"></div>
+        </div>
         <div class="reader__pages" id="readerPages"></div>
         <p class="reader__status" id="readerStatus" role="status"></p>
     </div>

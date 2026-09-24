@@ -1584,13 +1584,16 @@ const READER = {
 (function reader() {
     const root = $("#reader");
     if (!root) return;
-    const view = $("#readerView"), pages = $("#readerPages"), status = $("#readerStatus");
+    const view = $("#readerView"), pages = $("#readerPages"), book = $("#readerBook"), status = $("#readerStatus");
     const pageInput = $("#readerPage"), total = $("#readerTotal"), chapter = $("#readerChapter");
     const ZOOMS = [.6, .8, 1, 1.25, 1.5, 2];
-    let doc = null, loading = null, sheets = [], zoom = 2, current = 1, lastFocus = null, observer = null, anchor = null;
+    const FLIP_MS = 700;
+    let doc = null, loading = null, count = 0, ratio = .707, current = 1, lastFocus = null;
+    let mode = "book", zoom = 2, sheets = [], observer = null, anchor = null;
 
     chapter.innerHTML = `<option value="">Chapters</option>` +
         READER.chapters.map(([name, p]) => `<option value="${p}">${esc(name)} · p. ${p}</option>`).join("");
+    try { if (localStorage.getItem("windar-reader") === "scroll") mode = "scroll"; } catch (e) { /* private mode */ }
 
     const loadScript = src => new Promise((ok, fail) => {
         const el = document.createElement("script");
@@ -1605,49 +1608,39 @@ const READER = {
         return pdfjsLib.getDocument({ url: READER.pdf, disableAutoFetch: true, disableStream: true, rangeChunkSize: 262144 }).promise;
     }).then(async d => {
         doc = d;
+        count = d.numPages;
         const first = (await d.getPage(1)).getViewport({ scale: 1 });
-        build(d.numPages, first.width / first.height);
-    });
-
-    function build(count, ratio) {
+        ratio = first.width / first.height;
         total.textContent = count;
         pageInput.max = count;
-        pages.style.setProperty("--ratio", ratio);
-        pages.innerHTML = Array.from({ length: count }, (_, i) => `<div class="reader__sheet" data-n="${i + 1}"><span>${i + 1}</span></div>`).join("");
-        sheets = $$(".reader__sheet", pages);
-        observer = new IntersectionObserver(entries => entries.forEach(e => e.isIntersecting ? draw(e.target) : clear(e.target)),
-            { root: view, rootMargin: "900px 0px" });
-        sheets.forEach(el => observer.observe(el));
-    }
+        root.style.setProperty("--ratio", ratio);
+    });
 
-    async function draw(sheet) {
-        if (sheet.dataset.state) return;
-        sheet.dataset.state = "loading";
-        const page = await doc.getPage(+sheet.dataset.n);
-        if (sheet.dataset.state !== "loading") return;
-        const base = page.getViewport({ scale: 1 });
-        const scale = sheet.clientWidth / base.width * Math.min(window.devicePixelRatio || 1, 2);
-        const vp = page.getViewport({ scale });
-        const canvas = document.createElement("canvas");
-        canvas.width = Math.floor(vp.width);
-        canvas.height = Math.floor(vp.height);
-        await page.render({ canvasContext: canvas.getContext("2d"), viewport: vp }).promise;
-        if (sheet.dataset.state !== "loading") return;
-        sheet.appendChild(canvas);
-        sheet.dataset.state = "done";
+    // one page drawn on a canvas, at the size it is shown (kept in a small cache)
+    const cache = new Map();
+    function render(n, width) {
+        const w = Math.round(width * Math.min(window.devicePixelRatio || 1, 2));
+        const key = n + "@" + w;
+        if (!cache.has(key)) {
+            cache.set(key, doc.getPage(n).then(async page => {
+                const vp = page.getViewport({ scale: w / page.getViewport({ scale: 1 }).width });
+                const canvas = document.createElement("canvas");
+                canvas.width = Math.floor(vp.width);
+                canvas.height = Math.floor(vp.height);
+                await page.render({ canvasContext: canvas.getContext("2d"), viewport: vp }).promise;
+                return canvas;
+            }));
+            if (cache.size > 24) cache.delete(cache.keys().next().value);
+        }
+        return cache.get(key);
     }
-
-    function clear(sheet) {
-        if (!sheet.dataset.state) return;
-        delete sheet.dataset.state;
-        const c = $("canvas", sheet);
-        if (c) { c.width = c.height = 0; c.remove(); }
-    }
-
-    const goTo = n => {
-        current = Math.min(Math.max(1, n | 0), sheets.length || 1);
-        if (sheets[current - 1]) view.scrollTop = sheets[current - 1].offsetTop - 16;
-        sync();
+    // a canvas can only be in one place: pages are copied onto the book
+    const copy = src => {
+        const c = document.createElement("canvas");
+        c.width = src.width;
+        c.height = src.height;
+        c.getContext("2d").drawImage(src, 0, 0);
+        return c;
     };
 
     function sync() {
@@ -1657,13 +1650,107 @@ const READER = {
         chapter.value = ch;
     }
 
+    /* ---------- Book: cover alone, then double pages that turn ---------- */
+    const B = { double: true, pw: 0, spread: 0, busy: false };
+    const spreadOf = p => B.double ? Math.floor(p / 2) : p;
+    const pagesOf = s => B.double ? [s ? 2 * s : 0, 2 * s + 1 <= count ? 2 * s + 1 : 0] : [0, s];
+
+    function measure() {
+        B.double = view.clientWidth >= 760;
+        const h = view.clientHeight - 48, w = view.clientWidth - (B.double ? 120 : 24);
+        B.pw = Math.floor(Math.min(h * ratio, B.double ? w / 2 : w));
+        book.style.setProperty("--pw", B.pw + "px");
+        book.classList.toggle("is-single", !B.double);
+    }
+
+    async function face(n) {
+        const el = document.createElement("div");
+        el.className = "book__face";
+        if (!n) { el.classList.add("is-blank"); return el; }
+        el.innerHTML = `<span>${n}</span>`;
+        const canvas = await render(n, B.pw);
+        el.appendChild(copy(canvas));
+        return el;
+    }
+    async function setSide(side, n) {
+        const slot = $(`.book__page--${side}`, book);
+        slot.replaceChildren(await face(n));
+        slot.classList.toggle("is-empty", !n);
+    }
+    function preload(s) {
+        [s - 1, s + 1, s + 2].forEach(x => pagesOf(x).forEach(n => { if (n > 0 && n <= count) render(n, B.pw); }));
+    }
+
+    async function showSpread(s) {
+        B.spread = s;
+        const [l, r] = pagesOf(s);
+        await Promise.all([setSide("left", l), setSide("right", r)]);
+        book.classList.toggle("is-cover", B.double && !l);
+        book.classList.toggle("is-back", B.double && !r);
+        current = r || l;
+        sync();
+        preload(s);
+    }
+
+    async function turn(dir) {
+        if (B.busy) return;
+        const next = B.spread + dir;
+        const last = spreadOf(count);
+        if (next < (B.double ? 0 : 1) || next > last) return;
+        B.busy = true;
+        const [l, r] = pagesOf(B.spread), [nl, nr] = pagesOf(next);
+        // the sheet that turns: front = page that leaves, back = page that arrives
+        const leaf = document.createElement("div");
+        leaf.className = `book__leaf book__leaf--${dir > 0 ? "next" : "prev"}`;
+        const [front, back] = await Promise.all(B.double
+            ? (dir > 0 ? [face(r), face(nl)] : [face(l), face(nr)])
+            : (dir > 0 ? [face(r), face(0)] : [face(nr), face(0)]));
+        front.classList.add("book__front");
+        back.classList.add("book__back");
+        leaf.append(front, back);
+        // under the leaf, the page that will be uncovered
+        if (B.double) await (dir > 0 ? setSide("right", nr) : setSide("left", nl));
+        else if (dir > 0) await setSide("right", nr);
+        book.appendChild(leaf);
+        leaf.getBoundingClientRect();
+        leaf.classList.add("is-turning");
+        await new Promise(ok => setTimeout(ok, FLIP_MS));
+        leaf.remove();
+        await showSpread(next);
+        B.busy = false;
+    }
+
+    /* ---------- Scroll: every page one under the other ---------- */
+    function buildScroll() {
+        if (sheets.length) return;
+        pages.innerHTML = Array.from({ length: count }, (_, i) => `<div class="reader__sheet" data-n="${i + 1}"><span>${i + 1}</span></div>`).join("");
+        sheets = $$(".reader__sheet", pages);
+        observer = new IntersectionObserver(entries => entries.forEach(e => e.isIntersecting ? draw(e.target) : clear(e.target)),
+            { root: view, rootMargin: "900px 0px" });
+        sheets.forEach(el => observer.observe(el));
+    }
+    async function draw(sheet) {
+        if (sheet.dataset.state || !sheet.clientWidth) return;
+        sheet.dataset.state = "loading";
+        const canvas = copy(await render(+sheet.dataset.n, sheet.clientWidth));
+        if (sheet.dataset.state !== "loading") return;
+        sheet.appendChild(canvas);
+        sheet.dataset.state = "done";
+    }
+    function clear(sheet) {
+        if (!sheet.dataset.state) return;
+        delete sheet.dataset.state;
+        const c = $("canvas", sheet);
+        if (c) { c.width = c.height = 0; c.remove(); }
+    }
+
     let ticking = false;
     view.addEventListener("scroll", () => {
-        if (ticking || !sheets.length || anchor !== null) return;
+        if (mode !== "scroll" || ticking || !sheets.length || anchor !== null) return;
         ticking = true;
         requestAnimationFrame(() => {
             const step = sheets[1] ? sheets[1].offsetTop - sheets[0].offsetTop : 1;
-            current = Math.min(sheets.length, Math.max(1, Math.floor((view.scrollTop + view.clientHeight / 3 - sheets[0].offsetTop) / step) + 1));
+            current = Math.min(count, Math.max(1, Math.floor((view.scrollTop + view.clientHeight / 3 - sheets[0].offsetTop) / step) + 1));
             sync();
             ticking = false;
         });
@@ -1680,15 +1767,36 @@ const READER = {
         goTo(keep);
     }
 
+    /* ---------- Common ---------- */
+    function goTo(n) {
+        n = Math.min(Math.max(1, n | 0), count || 1);
+        current = n;
+        if (mode === "book") return showSpread(spreadOf(n));
+        if (sheets[n - 1]) view.scrollTop = sheets[n - 1].offsetTop - 16;
+        sync();
+    }
+    const step = dir => mode === "book" ? turn(dir) : goTo(current + dir);
+
+    function setMode(m, keep = current) {
+        mode = m;
+        root.dataset.mode = m;
+        $$("[data-mode]", root).forEach(b => b.setAttribute("aria-pressed", b.dataset.mode === m));
+        try { localStorage.setItem("windar-reader", m); } catch (e) { /* private mode */ }
+        if (!doc) return;
+        if (m === "book") { measure(); showSpread(spreadOf(keep)); }
+        else { buildScroll(); requestAnimationFrame(() => goTo(keep)); }
+    }
+
     function open(page) {
         lastFocus = document.activeElement;
         root.hidden = false;
         document.documentElement.classList.add("reader-open");
         view.focus({ preventScroll: true });
         if (location.hash !== "#catalogue") history.replaceState(null, "", "#catalogue");
+        root.dataset.mode = mode;
         if (doc) return goTo(page || current);
         status.textContent = "Opening the catalogue…";
-        load().then(() => { status.textContent = ""; goTo(page || 1); }).catch(() => {
+        load().then(() => { status.textContent = ""; setMode(mode, page || 1); }).catch(() => {
             loading = null;
             status.innerHTML = `The catalogue could not be opened here. <a href="${READER.pdf}" download>Download the PDF (58 MB)</a>`;
         });
@@ -1708,8 +1816,9 @@ const READER = {
         open(+link.dataset.read || 0);
     });
     $$("[data-close-reader]", root).forEach(el => el.addEventListener("click", close));
-    $("#readerPrev").addEventListener("click", () => goTo(current - 1));
-    $("#readerNext").addEventListener("click", () => goTo(current + 1));
+    $$("[data-mode]", root).forEach(b => b.addEventListener("click", () => b.dataset.mode !== mode && setMode(b.dataset.mode)));
+    $("#readerPrev").addEventListener("click", () => step(-1));
+    $("#readerNext").addEventListener("click", () => step(1));
     $("#readerIn").addEventListener("click", () => setZoom(zoom + 1));
     $("#readerOut").addEventListener("click", () => setZoom(zoom - 1));
     pageInput.addEventListener("change", () => goTo(+pageInput.value));
@@ -1718,17 +1827,38 @@ const READER = {
         if (root.hidden) return;
         if (e.key === "Escape") close();
         if (e.target === pageInput || e.target === chapter) return;
-        if (e.key === "ArrowRight") goTo(current + 1);
-        if (e.key === "ArrowLeft") goTo(current - 1);
+        if (e.key === "ArrowRight") step(1);
+        if (e.key === "ArrowLeft") step(-1);
     });
+
+    // book: click a page to turn it, or swipe on a phone
+    book.addEventListener("click", e => {
+        if (!B.double) return step(1);
+        const box = book.getBoundingClientRect();
+        step(e.clientX > box.left + box.width / 2 ? 1 : -1);
+    });
+    let x0 = null;
+    book.addEventListener("pointerdown", e => { x0 = e.clientX; });
+    book.addEventListener("pointerup", e => {
+        if (x0 === null) return;
+        const dx = e.clientX - x0;
+        x0 = null;
+        if (Math.abs(dx) > 50) { e.preventDefault(); book.dataset.swiped = "1"; step(dx < 0 ? 1 : -1); }
+    });
+    book.addEventListener("click", e => { if (book.dataset.swiped) { e.stopImmediatePropagation(); delete book.dataset.swiped; } }, true);
+
     pages.style.setProperty("--zoom", ZOOMS[zoom]);
-    // new window size: pages are drawn again at the right sharpness, on the same page
+    // new window size: pages are drawn again at the right size, on the same page
     let resized;
     window.addEventListener("resize", () => {
-        if (root.hidden || !sheets.length) return;
+        if (root.hidden || !doc) return;
         if (anchor === null) anchor = current;
         clearTimeout(resized);
-        resized = setTimeout(() => { current = anchor; anchor = null; setZoom(zoom); }, 250);
+        resized = setTimeout(() => {
+            current = anchor;
+            anchor = null;
+            if (mode === "book") { measure(); showSpread(spreadOf(current)); } else setZoom(zoom);
+        }, 250);
     });
 
     // a shared link to windar…/#catalogue opens the catalogue straight away

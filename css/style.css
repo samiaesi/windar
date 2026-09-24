@@ -2633,9 +2633,84 @@ html.reader-open, html.reader-open body { overflow: hidden; }
 .reader__status a { color: #aab1ff; }
 @media (max-width: 760px) {
     .reader__bar { flex-wrap: wrap; row-gap: 8px; }
-    .reader__title { flex: 1 1 calc(100% - 110px); font-size: 14px; }
+    .reader__title { flex: 1 1 0; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 14px; }
+    .reader__title small { display: none; }
+    .reader__mode button { padding: 0 10px; }
     .reader__chapters { order: 3; flex: 1 1 120px; min-width: 0; }
     .reader__chapters select { width: 100%; max-width: none; }
     .reader__nav { order: 4; }
     .reader__zoom { display: none; }
+}
+
+/* reader: book / scroll switch */
+.reader__mode { display: flex; padding: 3px; border-radius: 100px; background: rgba(255, 255, 255, .06); border: 1px solid rgba(255, 255, 255, .14); }
+.reader__mode button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 32px;
+    padding: 0 14px;
+    border-radius: 100px;
+    color: rgba(255, 255, 255, .7);
+    font: 500 13.5px var(--sans);
+}
+.reader__mode button svg { width: 15px; height: 15px; }
+.reader__mode button[aria-pressed="true"] { background: var(--white); color: var(--graphite); }
+.reader[data-mode="book"] .reader__zoom,
+.reader[data-mode="book"] .reader__pages,
+.reader[data-mode="scroll"] .book { display: none; }
+.reader[data-mode="book"] .reader__view { display: grid; place-items: center; overflow: hidden; }
+
+/* reader: the book */
+.book {
+    --pw: 400px;
+    position: relative;
+    display: flex;
+    width: calc(var(--pw) * 2);
+    height: calc(var(--pw) / var(--ratio));
+    perspective: 2600px;
+    cursor: pointer;
+    user-select: none;
+    touch-action: pan-y;
+    transition: transform .6s var(--ease);
+}
+.book.is-cover { transform: translateX(calc(var(--pw) * -.5)); }
+.book.is-back { transform: translateX(calc(var(--pw) * .5)); }
+.book.is-single { width: var(--pw); }
+.book.is-single .book__page--left { display: none; }
+.book__page { position: relative; width: var(--pw); height: 100%; box-shadow: 0 18px 40px rgba(0, 0, 0, .4); }
+.book__page.is-empty { visibility: hidden; }
+.book__page::after { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+.book__page--left::after { background: linear-gradient(to left, rgba(0, 0, 0, .22), rgba(0, 0, 0, .05) 4%, transparent 9%); }
+.book__page--right::after { background: linear-gradient(to right, rgba(0, 0, 0, .22), rgba(0, 0, 0, .05) 4%, transparent 9%); }
+.book.is-single .book__page--right::after { display: none; }
+.book__face { position: absolute; inset: 0; background: #f4f4f2; overflow: hidden; }
+.book__face > span { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--mono); font-size: 13px; color: #a3a4a8; }
+.book__face canvas { position: absolute; inset: 0; width: 100%; height: 100%; background: var(--white); }
+.book__face.is-blank { background: #eceae5; }
+.book__leaf {
+    position: absolute;
+    top: 0;
+    z-index: 3;
+    width: var(--pw);
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform .7s cubic-bezier(.45, .05, .25, 1);
+}
+.book__leaf--next { right: 0; transform-origin: left center; }
+.book__leaf--next.is-turning { transform: rotateY(-180deg); }
+.book__leaf--prev { left: 0; transform-origin: right center; }
+.book__leaf--prev.is-turning { transform: rotateY(180deg); }
+.book.is-single .book__leaf { left: 0; right: auto; transform-origin: left center; }
+.book.is-single .book__leaf--prev { transform: rotateY(-180deg); }
+.book.is-single .book__leaf--prev.is-turning { transform: rotateY(0); }
+.book__front, .book__back { backface-visibility: hidden; -webkit-backface-visibility: hidden; box-shadow: 0 10px 30px rgba(0, 0, 0, .3); }
+.book__back { transform: rotateY(180deg); }
+/* light on the turning sheet */
+.book__front::after, .book__back::after { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0; animation: leaf-shade .7s ease-in-out; }
+.book__front::after { background: linear-gradient(to left, rgba(0, 0, 0, .25), transparent 60%); }
+.book__back::after { background: linear-gradient(to right, rgba(0, 0, 0, .25), transparent 60%); }
+@keyframes leaf-shade { 50% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+    .book, .book__leaf { transition-duration: .01s; }
 }
