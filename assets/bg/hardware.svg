@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 460" fill="none" stroke="#1b2bf0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <!-- hinge -->
+  <rect x="40" y="60" width="66" height="160" rx="4"/>
+  <rect x="122" y="60" width="66" height="160" rx="4"/>
+  <rect x="106" y="48" width="16" height="184" rx="8"/>
+  <circle cx="73" cy="92" r="7"/><circle cx="73" cy="140" r="7"/><circle cx="73" cy="188" r="7"/>
+  <circle cx="155" cy="92" r="7"/><circle cx="155" cy="140" r="7"/><circle cx="155" cy="188" r="7"/>
+  <path d="M114 24v232" stroke-dasharray="18 5 3 5" stroke-width="1.2"/>
+  <!-- lever handle -->
+  <rect x="262" y="66" width="52" height="128" rx="12"/>
+  <circle cx="288" cy="130" r="10"/>
+  <path d="M288 116h128a14 14 0 0 1 0 28H288" />
+  <path d="M288 40v200M240 130h210" stroke-dasharray="18 5 3 5" stroke-width="1.2"/>
+  <!-- corner joint -->
+  <path d="M490 50h52v116h118v52H490z"/>
+  <circle cx="516" cy="84" r="8"/><circle cx="516" cy="134" r="8"/><circle cx="582" cy="192" r="8"/><circle cx="632" cy="192" r="8"/>
+  <circle cx="516" cy="192" r="4"/>
+  <!-- sliding roller -->
+  <rect x="712" y="70" width="156" height="58" rx="8"/>
+  <circle cx="744" cy="150" r="26"/><circle cx="744" cy="150" r="8"/>
+  <circle cx="836" cy="150" r="26"/><circle cx="836" cy="150" r="8"/>
+  <path d="M790 70V46M780 46h20" />
+  <!-- espagnolette with locking cams -->
+  <rect x="40" y="318" width="620" height="24" rx="4"/>
+  <rect x="300" y="304" width="84" height="52" rx="6"/>
+  <circle cx="120" cy="330" r="13"/><circle cx="120" cy="330" r="5"/>
+  <circle cx="560" cy="330" r="13"/><circle cx="560" cy="330" r="5"/>
+  <path d="M20 330h660" stroke-dasharray="18 5 3 5" stroke-width="1.2"/>
+  <g fill="#1b2bf0" stroke="none" font-family="monospace" font-size="15">
+    <text x="40" y="282">HG-01 · HINGE</text>
+    <text x="252" y="282">HD-02 · HANDLE</text>
+    <text x="490" y="282">CJ-03 · CORNER JOINT</text>
+    <text x="712" y="222">SL-05 · ROLLER</text>
+    <text x="40" y="396">LK-04 · ESPAGNOLETTE &amp; LOCKING CAMS</text>
+  </g>
+</svg>

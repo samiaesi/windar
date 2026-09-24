@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 820" fill="none" stroke="#1b2bf0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <!-- frame and sash -->
+  <rect x="80" y="60" width="440" height="620"/>
+  <rect x="108" y="88" width="384" height="564"/>
+  <rect x="118" y="98" width="364" height="544" stroke-width="1.4"/>
+  <rect x="150" y="130" width="300" height="480"/>
+  <!-- glass reflections -->
+  <path d="M178 590l84-84M206 604l98-98M404 170l-60 60" stroke-width="1.2"/>
+  <!-- opening symbols: turn (hinges left) and tilt (bottom) -->
+  <path d="M450 130L150 370L450 610" stroke-dasharray="12 9" stroke-width="1.4"/>
+  <path d="M150 130L300 610L450 130" stroke-dasharray="4 7" stroke-width="1.4"/>
+  <!-- handle and hinges -->
+  <rect x="460" y="350" width="14" height="24" rx="3"/>
+  <rect x="463" y="374" width="8" height="74" rx="4"/>
+  <rect x="110" y="140" width="10" height="34" rx="2"/>
+  <rect x="110" y="566" width="10" height="34" rx="2"/>
+  <!-- dimensions -->
+  <path d="M80 690v56M520 690v56M80 732h440M72 740l16-16M512 740l16-16" stroke-width="1.2"/>
+  <path d="M530 60h56M530 680h56M572 60v620M564 68l16-16M564 688l16-16" stroke-width="1.2"/>
+  <g fill="#1b2bf0" stroke="none" font-family="monospace" font-size="18" text-anchor="middle">
+    <text x="300" y="722">1200</text>
+    <text x="0" y="0" transform="translate(552 370) rotate(-90)">1600</text>
+    <text x="300" y="24" font-size="16">A</text>
+  </g>
+  <!-- section mark -->
+  <path d="M300 32v20M290 52h20" stroke-width="2.4"/>
+  <!-- title block -->
+  <rect x="360" y="758" width="240" height="48" stroke-width="1.4"/>
+  <path d="M440 758v48" stroke-width="1.4"/>
+  <g fill="#1b2bf0" stroke="none" font-family="monospace" font-size="15">
+    <text x="376" y="788">W-01</text>
+    <text x="454" y="788">TILT &amp; TURN</text>
+  </g>
+</svg>

@@ -2059,3 +2059,101 @@ body.is-locked .wa { display: none; }
     .pj__actions .btn { width: 100%; white-space: normal; height: auto; min-height: 44px; padding: 10px 16px; }
     .pj__art-name { font-size: 22px; }
 }
+
+/* ==========================================================
+   Windar backgrounds — technical drawings of windows,
+   profiles and hardware, kept very light behind the content
+   (files in assets/bg: window-elevation, profile-section,
+   hardware, tile — all editable SVG)
+   ========================================================== */
+.has-bg { position: relative; isolation: isolate; overflow: clip; }
+.has-bg::before,
+.has-bg::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    pointer-events: none;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+/* About: tilt & turn window elevation, bottom left */
+.bg-elevation::before {
+    left: -110px;
+    bottom: -60px;
+    width: 460px;
+    height: 590px;
+    background-image: url(../assets/bg/window-elevation.svg);
+    opacity: .07;
+}
+
+/* Product categories: hardware sheet, top right */
+.bg-hardware::before {
+    right: -60px;
+    top: 36px;
+    width: 640px;
+    height: 330px;
+    background-image: url(../assets/bg/hardware.svg);
+    opacity: .08;
+}
+
+/* Grey sections: fine drawing-paper grid */
+.bg-tile::before {
+    inset: 0;
+    background-image: url(../assets/bg/tile.svg);
+    background-size: 120px 120px;
+    background-repeat: repeat;
+    opacity: .16;
+    mask-image: linear-gradient(180deg, #000 0%, transparent 55%);
+    -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 55%);
+}
+
+/* Product range: profile cross-section, top right (on top of the grid) */
+.bg-profile-right::after {
+    right: -40px;
+    top: 30px;
+    width: 440px;
+    height: 356px;
+    background-image: url(../assets/bg/profile-section.svg);
+    opacity: .09;
+}
+
+/* Sales network: profile cross-section, bottom left */
+.bg-profile::before {
+    left: -90px;
+    bottom: -40px;
+    width: 460px;
+    height: 372px;
+    background-image: url(../assets/bg/profile-section.svg);
+    opacity: .07;
+}
+
+/* Dark areas: same drawings in white */
+.bg-elevation-dark::before {
+    left: -90px;
+    bottom: -120px;
+    width: 480px;
+    height: 615px;
+    background-image: url(../assets/bg/window-elevation.svg);
+    filter: brightness(0) invert(1);
+    opacity: .06;
+}
+.bg-profile-dark::after {
+    right: -60px;
+    bottom: 60px;
+    width: 520px;
+    height: 420px;
+    background-image: url(../assets/bg/profile-section.svg);
+    filter: brightness(0) invert(1);
+    opacity: .045;
+}
+
+@media (max-width: 960px) {
+    .bg-hardware::before { width: 420px; height: 216px; top: 20px; right: -120px; }
+    .bg-profile-right::after { width: 300px; height: 243px; right: -90px; }
+}
+@media (max-width: 640px) {
+    .bg-elevation::before, .bg-elevation-dark::before { width: 300px; height: 385px; left: -110px; opacity: .05; }
+    .bg-hardware::before { opacity: .06; }
+    .bg-profile::before, .bg-profile-dark::after { width: 320px; height: 258px; opacity: .05; }
+}

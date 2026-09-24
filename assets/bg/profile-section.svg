@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 420" fill="none" stroke="#1b2bf0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <defs>
+    <pattern id="h" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path d="M0 0v6" stroke="#1b2bf0" stroke-width="1.4"/></pattern>
+  </defs>
+  <!-- frame profile -->
+  <rect x="40" y="80" width="130" height="260" rx="4"/>
+  <rect x="52" y="92" width="48" height="70" rx="2"/>
+  <rect x="52" y="172" width="48" height="76" rx="2"/>
+  <rect x="52" y="258" width="48" height="70" rx="2"/>
+  <rect x="104" y="120" width="14" height="44" fill="url(#h)"/>
+  <rect x="104" y="256" width="14" height="44" fill="url(#h)"/>
+  <rect x="122" y="92" width="38" height="236" rx="2"/>
+  <!-- sash profile -->
+  <rect x="160" y="112" width="140" height="196" rx="4"/>
+  <rect x="172" y="124" width="48" height="58" rx="2"/>
+  <rect x="172" y="192" width="48" height="56" rx="2"/>
+  <rect x="172" y="258" width="48" height="38" rx="2"/>
+  <rect x="226" y="150" width="14" height="40" fill="url(#h)"/>
+  <rect x="226" y="228" width="14" height="40" fill="url(#h)"/>
+  <rect x="244" y="124" width="46" height="172" rx="2"/>
+  <!-- gaskets -->
+  <circle cx="165" cy="104" r="6"/><circle cx="165" cy="318" r="6"/><circle cx="306" cy="136" r="5"/><circle cx="306" cy="286" r="5"/>
+  <!-- double glazing -->
+  <rect x="310" y="40" width="9" height="340"/>
+  <rect x="352" y="40" width="9" height="340"/>
+  <rect x="319" y="150" width="33" height="14" fill="url(#h)"/>
+  <rect x="319" y="258" width="33" height="14" fill="url(#h)"/>
+  <rect x="361" y="118" width="26" height="46" rx="3"/>
+  <!-- dimensions & leaders -->
+  <path d="M40 360v34M361 360v34M40 384h321M34 390l12-12M355 390l12-12" stroke-width="1.2"/>
+  <path d="M20 80h14M20 340h14M26 80v260M20 86l12-12M20 346l12-12" stroke-width="1.2"/>
+  <path d="M111 142L200 40h60M165 318L232 400h54M336 157L430 90h40" stroke-width="1.2"/>
+  <g fill="#1b2bf0" stroke="none" font-family="monospace" font-size="14">
+    <text x="190" y="378" text-anchor="middle">76</text>
+    <text transform="translate(18 214) rotate(-90)" text-anchor="middle">58</text>
+    <text x="262" y="36">THERMAL BREAK</text>
+    <text x="290" y="404">EPDM</text>
+    <text x="474" y="86">IGU 24</text>
+  </g>
+</svg>
