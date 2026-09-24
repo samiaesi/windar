@@ -2532,3 +2532,5 @@ body.is-locked .wa { display: none; }
     .sys__specs { grid-template-columns: 1fr 1fr; }
     .sys__actions .btn { width: 100%; }
 }
+
+.sys__detail--picto { object-fit: contain; padding: 6px; }

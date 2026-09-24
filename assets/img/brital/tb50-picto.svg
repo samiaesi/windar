@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" fill="none" stroke="#16408f" stroke-linecap="round" stroke-linejoin="round">
+  <!-- TB-50 folding door pictogram: elevation (top) and plan view while folding (bottom) -->
+  <rect width="240" height="240" fill="#ffffff" stroke="none"/>
+
+  <!-- elevation: outer frame and 4 panels -->
+  <rect x="28" y="26" width="184" height="118" stroke-width="3"/>
+  <path d="M74 26v118M120 26v118M166 26v118" stroke-width="2"/>
+  <!-- opening symbols (apex on the hinge side) -->
+  <path d="M34 34 70 85 34 136M114 34 78 85 114 136M126 34 162 85 126 136M206 34 170 85 206 136" stroke-width="1.4" stroke-dasharray="5 4"/>
+  <!-- handle -->
+  <path d="M68 80v11" stroke-width="3"/>
+
+  <!-- plan view: panels folding in accordion towards the left -->
+  <path d="M28 170h184" stroke-width="1.4" stroke-dasharray="3 5"/>
+  <path d="M28 170l22 30 22-30 22 30" stroke-width="4"/>
+  <circle cx="28" cy="170" r="3.4" fill="#16408f" stroke="none"/>
+  <circle cx="50" cy="200" r="3.4" fill="#16408f" stroke="none"/>
+  <circle cx="72" cy="170" r="3.4" fill="#16408f" stroke="none"/>
+  <circle cx="94" cy="200" r="3.4" fill="#16408f" stroke="none"/>
+  <!-- movement arrow -->
+  <path d="M190 190h-66M134 182l-10 8 10 8" stroke-width="2.4"/>
+
+  <!-- label -->
+  <text x="212" y="226" text-anchor="end" font-family="monospace" font-size="13" fill="#16408f" stroke="none">TB-50 · FOLDING</text>
+</svg>
