@@ -1339,7 +1339,13 @@ document.addEventListener("click", e => {
     const el = e.target.closest("[data-request]");
     if (!el) return;
     e.preventDefault();
-    goToForm(el.dataset.request, { topic: el.dataset.topic, reference: el.dataset.reference });
+    goToForm(el.dataset.request, { topic: el.dataset.topic, reference: el.dataset.reference, message: el.dataset.message });
+    // leave the cursor right after a pre-filled "…code: " so the visitor can type it
+    if (el.dataset.message) setTimeout(() => {
+        const m = contactForm.elements.message;
+        m.focus({ preventScroll: true });
+        m.setSelectionRange(el.dataset.message.length, el.dataset.message.length);
+    }, 650);
 });
 
 (function form() {
