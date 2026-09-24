@@ -18,20 +18,20 @@ const MASTER_PAGE = "https://www.masteritaly.com/catalogo/en/shop/product/";
 const SYSTEMS = {
     "Window Line": {
         icon: "i-window", image: MASTER_IMG + "3420F_1.jpg",
-        text: "Tilt & turn and casement hardware for aluminium windows.",
-        lines: ["WEEN", "2.0", "Locking points", "Lever bolts"],
+        text: "Tilt & turn, casement and pivot hardware for aluminium windows.",
+        lines: ["WEEN", "WEEN HIDE", "2.0", "EASY PIVOT", "BI-HID"],
         catalogue: "https://www.masteritaly.com/catalogo/shop/finestra/"
     },
     "Handle Line": {
         icon: "i-handle", image: MASTER_IMG + "6008.jpg",
         text: "Cremone bolts and handles for windows, doors and sliding sashes.",
-        lines: ["ITALIA", "COMFORT", "Offset handles"],
+        lines: ["ITALIA", "COMFORT", "NIX", "KARMA"],
         catalogue: "https://www.masteritaly.com/catalogo/shop/maniglie/"
     },
     "Sliding Line": {
         icon: "i-sliding", image: MASTER_IMG + "6601_1.jpg",
         text: "Sliding units, lift & slide and parallel sliding systems.",
-        lines: ["MIDKIT 90", "AS300 lift & slide", "SP160"],
+        lines: ["MIDKIT 90", "AS300 lift & slide", "SP160", "SHARK"],
         catalogue: "https://www.masteritaly.com/catalogo/shop/scorrevoli/"
     },
     "Corner Joint Line": {
@@ -42,14 +42,14 @@ const SYSTEMS = {
     },
     "Door Line": {
         icon: "i-door", image: MASTER_IMG + "8010.jpg",
-        text: "Hinges and hardware for aluminium doors.",
-        lines: ["DINAMIKA hinges"],
+        text: "Hinges, multipoint locks and hardware for aluminium doors.",
+        lines: ["DINAMIKA hinges", "Multipoint locks", "Cylinder covers"],
         catalogue: "https://www.masteritaly.com/catalogo/shop/porte/"
     },
     "Automation Line": {
         icon: "i-auto", image: "assets/img/news-wislide.jpg", photo: true, badge: "New · WiSlide 230V",
         text: "Electric actuators for sliding frames, transoms and projecting windows.",
-        lines: ["WISLIDE", "CLOUD"],
+        lines: ["WISLIDE", "CLOUD", "APRO"],
         catalogue: "https://www.masteritaly.com/catalogo/shop/automazione/"
     },
     "Curtain Wall Line": {
@@ -70,23 +70,44 @@ const PRODUCTS = [
     { category: "Window Line", ref: "3421.32", name: "WEEN additional locking points", desc: "Zamak, stainless steel screws", img: "2058-ween-punti-di-chiusura-supplementare-ween-erre-40-570-3421_32.jpg", page: "570-ween-additional-locking-points-ween-erre-40" },
     { category: "Window Line", ref: "3522.32", name: "2.0 tilt & turn sash", desc: "Zamak retainers, stainless steel screws", img: "3521_32.jpg", page: "623-2-0-2-0-duepuntozero-tilt-and-turn-sash-new-nc40" },
     { category: "Window Line", ref: "4515.15", name: "BI-HID two-way lever bolt", desc: "For side-by-side sash · CE", img: "4515_15.jpg", page: "829-bi-hid-two-way-lever-bolt-for-side-by-side-sash-ce" },
+    { category: "Window Line", ref: "3310.50", name: "WEEN HIDE 110 / 180 rebate sash kit", desc: "Stainless steel rod, zamak support", img: "3310_50.jpg", page: "516-ween-ween-hide-110-ween-hide-180-rebate-sash-kit" },
+    { category: "Window Line", ref: "4247.7", name: "WEEN anti-burglary locking points", desc: "Stainless steel components · WEEN / WEEN HIDE", img: "2664-ween-ween-ween-hide-110-ween-hide-180-punti-di-chiusura-antieffrazione-792-4247_7.jpg", page: "792-ween-ween-ween-hide-110-ween-hide-180-anti-burglary-locking-points" },
+    { category: "Window Line", ref: "3421.31", name: "WEEN vertical and horizontal locking kit", desc: "For WEEN ERRE 40", img: "3421_31.jpg", page: "569-ween-vertical-and-horizontal-locking-kit-ween-erre-40" },
+    { category: "Window Line", ref: "3521.30", name: "WEEN additional arm for tilt & turn sash", desc: "Sash width 1200–1700 mm", img: "3520_30.jpg", page: "613-ween-additional-arm-for-tilt-and-turn-sash" },
+    { category: "Window Line", ref: "3626.1", name: "BING two-way movement", desc: "Adjustable inlet 15–27 mm", img: "3626_1.jpg", page: "665-bing-two-way-movement" },
+    { category: "Window Line", ref: "3710.10", name: "EASY PIVOT perimetral closing kit", desc: "Pivot windows, 4 locking points, 38.5 mm", img: "2086-easy-pivot-kit-chiusura-perimetrale-per-bilico-1910-3710_10.jpg", page: "1910-easy-pivot-perimetral-closing-kit-for-pivot" },
+    { category: "Window Line", ref: "3710", name: "EASY PIVOT fixing kit for pivot hinges", desc: "Pivot windows", img: "2084-easy-pivot-kit-fissaggio-cerniere-per-bilico-1908-3710.jpg", page: "1908-easy-pivot-fixing-kit-for-pivot-hinges" },
 
     { category: "Handle Line", ref: "6018", name: "ITALIA cremone bolt", desc: "Die-cast aluminium, anti-false manoeuvre", img: "6008.jpg", page: "913-italia-cremone-bolt" },
     { category: "Handle Line", ref: "6108", name: "COMFORT cremone bolt, removable handle", desc: "Die-cast aluminium", img: "2072-comfort-cremonese-con-manico-asportabile-963-6108.jpg", page: "963-comfort-cremone-bolt-with-removable-handle" },
     { category: "Handle Line", ref: "3073", name: "ITALIA handle", desc: "Die-cast aluminium, 100 mm body", img: "3073.jpg", page: "385-italia-handle" },
     { category: "Handle Line", ref: "3076.1D", name: "COMFORT offset handle", desc: "Zamak with delrin bushes, 46 mm projection", img: "3076_1D.jpg", page: "399-comfort-offset-handle" },
+    { category: "Handle Line", ref: "3074.7", name: "COMFORT reduced handle", desc: "Zamak, 26 mm panel projection", img: "3074_7.jpg", page: "390-comfort-handle" },
+    { category: "Handle Line", ref: "4101", name: "NIX concealed handle", desc: "18 mm backset", img: "2725-nix-maniglia-a-scomparsa-2416-4101.jpg", page: "2416-nix-concealed-handle" },
+    { category: "Handle Line", ref: "3106", name: "KARMA reduced handle", desc: "For bi-fold systems", img: "2110-topflex-martellina-1934-3106_1.jpg", page: "1934-karma-reduced-handle" },
+    { category: "Handle Line", ref: "6061.68", name: "KARMA cremone bolt for louvre windows", desc: "Die-cast aluminium", img: "2535-karma-cremonese-per-apertura-gelosia-2263-6061_68.jpg", page: "2263-karma-cremone-bolt-louvre-windows" },
 
     { category: "Sliding Line", ref: "6601.1", name: "MIDKIT 90 assembly kit", desc: "Rollers rated 90 kg per sash", img: "6601_1.jpg", page: "1273-midkit-90-assembly-kit" },
     { category: "Sliding Line", ref: "6733.28", name: "AS300 lift & slide cremone bolt kit", desc: "Retractable hooks, L 2800 mm, 3 locking points", img: "6732_25.jpg", page: "1447-as300-lift-and-slide-system-cremone-bolt-kit-with-retractable-hooks" },
     { category: "Sliding Line", ref: "3920.2", name: "SP160 perimeter locking kit", desc: "Semi-automatic, zamak parts · parallel sliding", img: "3090_1.jpg", page: "710-sp160-perimeter-locking-kit" },
+    { category: "Sliding Line", ref: "6620.2", name: "MIDKIT 90 kit with handles and brackets", desc: "Die-cast brackets", img: "1909-midkit-90-kit-di-assemblaggio-con-maniglie-e-squadrette-1328-6620_2.jpg", page: "1328-midkit-90-assembly-kit-with-handles-and-brackets" },
+    { category: "Sliding Line", ref: "6730.28", name: "AS300 lift & slide lever mechanism", desc: "L 2800 mm, 4 locking points", img: "6730_13.jpg", page: "1414-as300-lift-and-slide-system-cremone-bolt-kit" },
+    { category: "Sliding Line", ref: "3627.12", name: "SHARK one-way movement", desc: "Galvanized zamak", img: "3627.jpg", page: "669-shark-one-way-movement" },
 
     { category: "Corner Joint Line", ref: "0371", name: "Pressofusa corner joint", desc: "Die-cast aluminium, internal / external buttons", img: "0371.jpg", page: "72-pressofusa-corner-joint-with-internal-external-buttons" },
     { category: "Corner Joint Line", ref: "0477.2", name: "Estrusa T and cross joint", desc: "Extruded aluminium, height 14 mm", img: "0477_2.jpg", page: "98-estrusa-t-and-cross-joint" },
+    { category: "Corner Joint Line", ref: "0366", name: "Pressofusa corner joint, external buttons", desc: "Die-cast aluminium, M8 screw, zamak buttons", img: "0366.jpg", page: "68-pressofusa-corner-joint-with-external-buttons" },
+    { category: "Corner Joint Line", ref: "0476.2", name: "Estrusa T and cross joint", desc: "Extruded aluminium, H 17.5 mm", img: "0476_2.jpg", page: "96-estrusa-t-and-cross-joint" },
 
     { category: "Door Line", ref: "8014", name: "DINAMIKA door hinge", desc: "2-flap, centre distance 93 mm", img: "8010.jpg", page: "1637-dinamika-door-hinge" },
+    { category: "Door Line", ref: "8010.14", name: "DINAMIKA fasteners for door hinges", desc: "Thermal-cut profiles, 68 mm centering pins", img: "8010_13.jpg", page: "1605-dinamika-fasteners-for-door-hinges-thermal-cut-profiles" },
+    { category: "Door Line", ref: "5300.35", name: "Bidirectional multipoint door lock", desc: "Side upright, external rods, 33 mm backset", img: "2016-master-serratura-multipunto-da-montante-bidirezionale-aste-esterne-1873-5300_35.jpg", page: "1873-master-bidirectional-multipoint-locking-for-side-upright-with-external-rods" },
+    { category: "Door Line", ref: "2129.10", name: "MINIMAL DESIGN cylinder cover", desc: "Nylon and aluminium", img: "2129_10.jpg", page: "263-minimal-design-cylinder-cover" },
 
     { category: "Automation Line", ref: "1122.5", name: "WISLIDE electric actuator", desc: "Rotating belt, sash up to 500 kg, 24 V", img: "1122.5D.jpg", page: "159-wislide-electric-actuator-with-rotating-belt" },
     { category: "Automation Line", ref: "1120.1", name: "CLOUD chain actuator", desc: "Transom and projecting frames, 230 V", img: "1120_1.jpg", page: "122-cloud-chain-actuator" },
+    { category: "Automation Line", ref: "1121.50", name: "CLOUD multi-channel radio control", desc: "30 programmable channels", img: "1121_50.jpg", page: "145-cloud-cloud-wislide-remote-control" },
+    { category: "Automation Line", ref: "1125.12", name: "APRO electromechanical lock", desc: "600 N, 24 V", img: "2487-apro-elettro-serratura-2223-1125_12.jpg", page: "2223-apro-electromechanical-lock" },
 
     { category: "Curtain Wall Line", ref: "6006", name: "EMPIRE cremone bolt handle", desc: "Aluminium body, 2 sliders, 44 mm projection", img: "6006.jpg", page: "888-empire-accessories-for-curtain-walls-opening-perimeter-locks" },
     { category: "Curtain Wall Line", ref: "1252.12", name: "EMPIRE corner drive", desc: "Eccentric pin, brass ferrule", img: "1252_12.jpg", page: "193-empire-corner-drive-with-setscrews" }
@@ -836,7 +857,8 @@ megaItem.addEventListener("focusout", e => { if (!megaItem.contains(e.relatedTar
 })();
 
 /* ---------- Products: filter + search ---------- */
-const state = { cat: "all", query: "" };
+const state = { cat: "all", query: "", all: false };
+const FIRST_SHOWN = 12; // products visible before "Show all"
 const grid = $("#productGrid");
 const chipsBox = $("#productChips");
 const searchInput = $("#productSearch");
@@ -863,6 +885,7 @@ function renderProducts() {
         (q ? ` · “${state.query.trim()}”` : "");
 
     if (!list.length) {
+        $("#productMore").hidden = true;
         grid.innerHTML = `
             <div class="empty">
                 <p>No product matches your search. Our team can find the right accessory for your system.</p>
@@ -871,10 +894,15 @@ function renderProducts() {
         return;
     }
 
-    grid.innerHTML = list.map((p, i) => {
+    const limited = state.cat === "all" && !state.query.trim() && !state.all && list.length > FIRST_SHOWN;
+    const shown = limited ? list.slice(0, FIRST_SHOWN) : list;
+    $("#productMore").hidden = !limited;
+    $("#productMore").innerHTML = `Show all ${list.length} products ${icon("i-plus")}`;
+
+    grid.innerHTML = shown.map((p, i) => {
         const added = quote.has(p.ref);
         return `
-        <article class="product" style="animation-delay:${i * 60}ms">
+        <article class="product" style="animation-delay:${Math.min(i, 11) * 50}ms">
             <div class="product__media">
                 <img src="${esc(p.img)}" alt="${esc(p.name)}" loading="lazy" onerror="this.style.visibility='hidden'">
                 <span class="product__ref">${esc(p.ref)}</span>
@@ -919,6 +947,7 @@ chipsBox.addEventListener("click", e => {
     if (chip) showCategory(chip.dataset.cat, false);
 });
 searchInput.addEventListener("input", () => { state.query = searchInput.value; renderProducts(); });
+$("#productMore").addEventListener("click", () => { state.all = true; renderProducts(); });
 
 grid.addEventListener("click", e => {
     const btn = e.target.closest(".product__add");

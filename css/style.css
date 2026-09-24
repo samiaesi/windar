@@ -2354,3 +2354,6 @@ body.is-locked .wa { display: none; }
 .family__media img[src*="masteritaly.com"] { object-fit: cover; object-position: center; transform: scale(1.18); }
 .family:hover .family__media img[src*="masteritaly.com"] { transform: scale(1.24); }
 @media (max-width: 640px) { .product__desc { font-size: 12px; } }
+
+.products__more { display: flex; justify-content: center; margin-top: 28px; }
+.products__more .btn[hidden] { display: none; }
