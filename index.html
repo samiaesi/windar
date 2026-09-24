@@ -74,7 +74,9 @@
     <symbol id="i-box" viewBox="0 0 48 48"><path d="M24 6 40 14v20L24 42 8 34V14z"/><path d="M8 14l16 8 16-8M24 22v20"/></symbol>
     <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
     <symbol id="i-out" viewBox="0 0 24 24"><path d="M8 16 16 8M9 8h7v7"/></symbol>
-    <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 4v12M6 11l6 6 6-6M5 20h14"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 5.5C6.5 4.2 9.3 4.2 12 6c2.7-1.8 5.5-1.8 8-.5v13c-2.5-1.3-5.3-1.3-8 .5-2.7-1.8-5.5-1.8-8-.5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 6v13" fill="none" stroke="currentColor" stroke-width="1.6"/></symbol>
+        <symbol id="i-minus" viewBox="0 0 24 24"><path d="M6 12h12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+        <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 4v12M6 11l6 6 6-6M5 20h14"/></symbol>
     <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></symbol>
     <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
     <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
@@ -124,12 +126,12 @@
                         <a href="https://www.masteritaly.com/en/configuratore" class="mega__all mega__all--ext" target="_blank" rel="noopener">MASTER configurator <svg><use href="#i-out"/></svg></a>
                         <a href="#brital" class="mega__all mega__all--ext">Aluminium systems by Brital <svg><use href="#i-arrow"/></svg></a>
                     </div>
-                    <a class="mega__promo" href="assets/media/master-technical-catalogue-2023.pdf" download>
+                    <a class="mega__promo" href="assets/media/master-technical-catalogue-2023.pdf" data-read>
                         <img src="assets/img/master-catalogue-cover.webp" alt="" loading="lazy">
                         <span class="mega__promo-text">
-                            <small>MASTER Italy · PDF</small>
+                            <small>MASTER Italy · 668 pages</small>
                             <strong>Technical catalogue</strong>
-                            <span>Full range &amp; technical data <svg><use href="#i-down"/></svg></span>
+                            <span>Read online <svg><use href="#i-book"/></svg></span>
                         </span>
                     </a>
                 </div>
@@ -223,7 +225,7 @@
                 </a>
                 <div class="about-us__ctas">
                     <a href="#projects" class="btn btn--dark">Our projects <svg><use href="#i-arrow"/></svg></a>
-                    <a href="assets/media/master-technical-catalogue-2023.pdf" class="btn btn--line" download><svg><use href="#i-down"/></svg> Technical catalogue</a>
+                    <a href="assets/media/master-technical-catalogue-2023.pdf" class="btn btn--line" data-read><svg><use href="#i-book"/></svg> Technical catalogue</a>
                 </div>
             </div>
 
@@ -715,7 +717,7 @@
                     <li><a href="#contact" data-request="business">Business request</a></li>
                     <li><a href="#contact" data-request="technical">Technical request</a></li>
                     <li><a href="#" data-sales>Talk to sales in your country</a></li>
-                    <li><a href="assets/media/master-technical-catalogue-2023.pdf" download>MASTER technical catalogue (PDF)</a></li>
+                    <li><a href="assets/media/master-technical-catalogue-2023.pdf" data-read>MASTER technical catalogue (read online)</a></li>
                     <li><a href="https://www.masteritaly.com/catalogo/en/" target="_blank" rel="noopener">MASTER online catalogue ↗</a></li>
                     <li><a href="https://www.masteritaly.com/en/configuratore" target="_blank" rel="noopener">MASTER configurator ↗</a></li>
                 </ul>
@@ -768,6 +770,32 @@
     <div class="sales">
         <button class="sales__close round" data-close-sales aria-label="Close"><svg><use href="#i-x"/></svg></button>
         <div class="sales__view" id="salesView"></div>
+    </div>
+</div>
+
+<!-- ============ CATALOGUE READER ============ -->
+<div class="reader" id="reader" role="dialog" aria-modal="true" aria-labelledby="readerTitle" hidden>
+    <div class="reader__bar">
+        <p class="reader__title" id="readerTitle"><small>MASTER Italy</small>Technical catalogue</p>
+        <label class="reader__chapters">
+            <span class="sr-only">Go to a chapter</span>
+            <select id="readerChapter"></select>
+        </label>
+        <div class="reader__nav">
+            <button class="round reader__prev" id="readerPrev" aria-label="Previous page"><svg><use href="#i-arrow"/></svg></button>
+            <label class="reader__page"><span class="sr-only">Page</span><input id="readerPage" type="number" min="1" value="1" inputmode="numeric"><span>/ <b id="readerTotal">668</b></span></label>
+            <button class="round" id="readerNext" aria-label="Next page"><svg><use href="#i-arrow"/></svg></button>
+        </div>
+        <div class="reader__zoom">
+            <button class="round" id="readerOut" aria-label="Zoom out"><svg><use href="#i-minus"/></svg></button>
+            <button class="round" id="readerIn" aria-label="Zoom in"><svg><use href="#i-plus"/></svg></button>
+        </div>
+        <a class="round" href="assets/media/master-technical-catalogue-2023.pdf" download aria-label="Download the PDF (58 MB)" title="Download the PDF (58 MB)"><svg><use href="#i-down"/></svg></a>
+        <button class="round reader__close" data-close-reader aria-label="Close the catalogue"><svg><use href="#i-x"/></svg></button>
+    </div>
+    <div class="reader__view" id="readerView" tabindex="-1">
+        <div class="reader__pages" id="readerPages"></div>
+        <p class="reader__status" id="readerStatus" role="status"></p>
     </div>
 </div>
 

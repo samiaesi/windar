@@ -257,10 +257,10 @@ const BANNERS = [
         type: "Download", layout: "split", image: "assets/img/master-catalogue-cover.webp", contain: true,
         short: "Technical catalogue",
         title: "The MASTER <em>technical catalogue</em>.",
-        text: "668 pages of products and technical data, ready to download.",
+        text: "668 pages of products and technical data, to read online or download.",
         buttons: [
-            { label: "Download PDF", href: "assets/media/master-technical-catalogue-2023.pdf", style: "blue", download: true },
-            { label: "Watch our video", href: "#about", style: "line" }
+            { label: "Read online", href: "assets/media/master-technical-catalogue-2023.pdf", style: "blue", read: true },
+            { label: "Download PDF", href: "assets/media/master-technical-catalogue-2023.pdf", style: "line", download: true }
         ]
     }
 ];
@@ -738,8 +738,8 @@ megaItem.addEventListener("focusout", e => { if (!megaItem.contains(e.relatedTar
     const fmtDate = d => new Date(d + "T00:00:00").toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
     const buttons = list => (list || []).slice(0, 2).map((b, n) => `
         <a class="${n === 0 ? "btn btn--blue" : "slide__link"}" href="${esc(b.href)}"
-           ${b.download ? "download" : ""} ${b.external ? 'target="_blank" rel="noopener"' : ""} ${b.meet !== undefined ? `data-meet="${b.meet}"` : ""} ${b.request ? `data-request="${esc(b.request)}"${b.topic ? ` data-topic="${esc(b.topic)}"` : ""}` : ""}>
-           ${esc(b.label)} ${icon(b.download ? "i-down" : b.external ? "i-out" : "i-arrow")}
+           ${b.download ? "download" : ""} ${b.read ? "data-read" : ""} ${b.external ? 'target="_blank" rel="noopener"' : ""} ${b.meet !== undefined ? `data-meet="${b.meet}"` : ""} ${b.request ? `data-request="${esc(b.request)}"${b.topic ? ` data-topic="${esc(b.topic)}"` : ""}` : ""}>
+           ${esc(b.label)} ${icon(b.download ? "i-down" : b.read ? "i-book" : b.external ? "i-out" : "i-arrow")}
         </a>`).join("");
 
     $("#bannerSlides").innerHTML = slides.map((s, i) => {
@@ -1010,7 +1010,8 @@ $("#systemsGrid").innerHTML = Object.entries(SYSTEMS).map(([name, f]) => {
             <p>Every line and reference from MASTER Italy, with technical data and drawings.</p>
             <div class="family__actions family__actions--stack">
                 <a class="btn btn--blue" href="${esc(MASTER_CATALOGUE)}" target="_blank" rel="noopener">Online catalogue ${icon("i-out")}</a>
-                <a class="btn btn--line" href="assets/media/master-technical-catalogue-2023.pdf" download>${icon("i-down")} Technical catalogue (PDF)</a>
+                <a class="btn btn--line" href="assets/media/master-technical-catalogue-2023.pdf" data-read>${icon("i-book")} Read the catalogue here</a>
+                <a class="family__pdf" href="assets/media/master-technical-catalogue-2023.pdf" download>${icon("i-down")} Download the PDF (58 MB)</a>
             </div>
         </div>
     </article>`;
@@ -1559,3 +1560,178 @@ renderQuote();
 renderProducts();
 $$(".reveal").forEach(el => revealer.observe(el));
 $("#year").textContent = new Date().getFullYear();
+
+
+/* =========================================================
+   Catalogue reader: the PDF read inside the site.
+   Only the pages on screen are downloaded (the server sends parts of the file),
+   so the 58 MB catalogue opens in a few seconds.
+   ========================================================= */
+const READER = {
+    pdf: "assets/media/master-technical-catalogue-2023.pdf",
+    lib: "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js",
+    worker: "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js",
+    // chapters of the MASTER catalogue (its own index), with their PDF page
+    chapters: [
+        ["Introduction", 3], ["Corner", 65], ["Joint", 85], ["Latches and junctions", 91],
+        ["Various accessories", 121], ["Bottom and top hung", 141], ["Pivot", 191],
+        ["Handles and cremone-bolts", 201], ["Closing", 293], ["Tilt and turn", 313],
+        ["Windows automation", 421], ["Hinges", 453], ["Big handles", 499], ["Sliding units", 509],
+        ["Lift and slide", 581], ["Tilt and slide", 597], ["Folding opening", 609], ["Notes", 664]
+    ]
+};
+
+(function reader() {
+    const root = $("#reader");
+    if (!root) return;
+    const view = $("#readerView"), pages = $("#readerPages"), status = $("#readerStatus");
+    const pageInput = $("#readerPage"), total = $("#readerTotal"), chapter = $("#readerChapter");
+    const ZOOMS = [.6, .8, 1, 1.25, 1.5, 2];
+    let doc = null, loading = null, sheets = [], zoom = 2, current = 1, lastFocus = null, observer = null, anchor = null;
+
+    chapter.innerHTML = `<option value="">Chapters</option>` +
+        READER.chapters.map(([name, p]) => `<option value="${p}">${esc(name)} · p. ${p}</option>`).join("");
+
+    const loadScript = src => new Promise((ok, fail) => {
+        const el = document.createElement("script");
+        el.src = src;
+        el.onload = ok;
+        el.onerror = fail;
+        document.head.appendChild(el);
+    });
+
+    const load = () => loading ||= loadScript(READER.lib).then(() => {
+        pdfjsLib.GlobalWorkerOptions.workerSrc = READER.worker;
+        return pdfjsLib.getDocument({ url: READER.pdf, disableAutoFetch: true, disableStream: true, rangeChunkSize: 262144 }).promise;
+    }).then(async d => {
+        doc = d;
+        const first = (await d.getPage(1)).getViewport({ scale: 1 });
+        build(d.numPages, first.width / first.height);
+    });
+
+    function build(count, ratio) {
+        total.textContent = count;
+        pageInput.max = count;
+        pages.style.setProperty("--ratio", ratio);
+        pages.innerHTML = Array.from({ length: count }, (_, i) => `<div class="reader__sheet" data-n="${i + 1}"><span>${i + 1}</span></div>`).join("");
+        sheets = $$(".reader__sheet", pages);
+        observer = new IntersectionObserver(entries => entries.forEach(e => e.isIntersecting ? draw(e.target) : clear(e.target)),
+            { root: view, rootMargin: "900px 0px" });
+        sheets.forEach(el => observer.observe(el));
+    }
+
+    async function draw(sheet) {
+        if (sheet.dataset.state) return;
+        sheet.dataset.state = "loading";
+        const page = await doc.getPage(+sheet.dataset.n);
+        if (sheet.dataset.state !== "loading") return;
+        const base = page.getViewport({ scale: 1 });
+        const scale = sheet.clientWidth / base.width * Math.min(window.devicePixelRatio || 1, 2);
+        const vp = page.getViewport({ scale });
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.floor(vp.width);
+        canvas.height = Math.floor(vp.height);
+        await page.render({ canvasContext: canvas.getContext("2d"), viewport: vp }).promise;
+        if (sheet.dataset.state !== "loading") return;
+        sheet.appendChild(canvas);
+        sheet.dataset.state = "done";
+    }
+
+    function clear(sheet) {
+        if (!sheet.dataset.state) return;
+        delete sheet.dataset.state;
+        const c = $("canvas", sheet);
+        if (c) { c.width = c.height = 0; c.remove(); }
+    }
+
+    const goTo = n => {
+        current = Math.min(Math.max(1, n | 0), sheets.length || 1);
+        if (sheets[current - 1]) view.scrollTop = sheets[current - 1].offsetTop - 16;
+        sync();
+    };
+
+    function sync() {
+        pageInput.value = current;
+        let ch = "";
+        READER.chapters.forEach(([, p]) => { if (p <= current) ch = p; });
+        chapter.value = ch;
+    }
+
+    let ticking = false;
+    view.addEventListener("scroll", () => {
+        if (ticking || !sheets.length || anchor !== null) return;
+        ticking = true;
+        requestAnimationFrame(() => {
+            const step = sheets[1] ? sheets[1].offsetTop - sheets[0].offsetTop : 1;
+            current = Math.min(sheets.length, Math.max(1, Math.floor((view.scrollTop + view.clientHeight / 3 - sheets[0].offsetTop) / step) + 1));
+            sync();
+            ticking = false;
+        });
+    });
+
+    function setZoom(i) {
+        zoom = Math.min(Math.max(0, i), ZOOMS.length - 1);
+        const keep = current;
+        pages.style.setProperty("--zoom", ZOOMS[zoom]);
+        $("#readerOut").disabled = zoom === 0;
+        $("#readerIn").disabled = zoom === ZOOMS.length - 1;
+        sheets.forEach(clear);
+        if (observer) { sheets.forEach(el => observer.unobserve(el)); sheets.forEach(el => observer.observe(el)); }
+        goTo(keep);
+    }
+
+    function open(page) {
+        lastFocus = document.activeElement;
+        root.hidden = false;
+        document.documentElement.classList.add("reader-open");
+        view.focus({ preventScroll: true });
+        if (location.hash !== "#catalogue") history.replaceState(null, "", "#catalogue");
+        if (doc) return goTo(page || current);
+        status.textContent = "Opening the catalogue…";
+        load().then(() => { status.textContent = ""; goTo(page || 1); }).catch(() => {
+            loading = null;
+            status.innerHTML = `The catalogue could not be opened here. <a href="${READER.pdf}" download>Download the PDF (58 MB)</a>`;
+        });
+    }
+
+    function close() {
+        root.hidden = true;
+        document.documentElement.classList.remove("reader-open");
+        if (location.hash === "#catalogue") history.replaceState(null, "", location.pathname + location.search);
+        if (lastFocus) lastFocus.focus({ preventScroll: true });
+    }
+
+    document.addEventListener("click", e => {
+        const link = e.target.closest("[data-read]");
+        if (!link || e.ctrlKey || e.metaKey || e.shiftKey) return;
+        e.preventDefault();
+        open(+link.dataset.read || 0);
+    });
+    $$("[data-close-reader]", root).forEach(el => el.addEventListener("click", close));
+    $("#readerPrev").addEventListener("click", () => goTo(current - 1));
+    $("#readerNext").addEventListener("click", () => goTo(current + 1));
+    $("#readerIn").addEventListener("click", () => setZoom(zoom + 1));
+    $("#readerOut").addEventListener("click", () => setZoom(zoom - 1));
+    pageInput.addEventListener("change", () => goTo(+pageInput.value));
+    chapter.addEventListener("change", () => chapter.value && goTo(+chapter.value));
+    document.addEventListener("keydown", e => {
+        if (root.hidden) return;
+        if (e.key === "Escape") close();
+        if (e.target === pageInput || e.target === chapter) return;
+        if (e.key === "ArrowRight") goTo(current + 1);
+        if (e.key === "ArrowLeft") goTo(current - 1);
+    });
+    pages.style.setProperty("--zoom", ZOOMS[zoom]);
+    // new window size: pages are drawn again at the right sharpness, on the same page
+    let resized;
+    window.addEventListener("resize", () => {
+        if (root.hidden || !sheets.length) return;
+        if (anchor === null) anchor = current;
+        clearTimeout(resized);
+        resized = setTimeout(() => { current = anchor; anchor = null; setZoom(zoom); }, 250);
+    });
+
+    // a shared link to windar…/#catalogue opens the catalogue straight away
+    if (location.hash === "#catalogue") open(1);
+    window.addEventListener("hashchange", () => { if (location.hash === "#catalogue" && root.hidden) open(); });
+})();
