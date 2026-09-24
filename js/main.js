@@ -201,7 +201,7 @@ const ABOUT_VIDEO = {
 };
 
 /* MAIN BANNER — what Windar wants to promote (events, products, corporate news…)
-   type    : "Event" | "Product" | "Corporate" | "News" | "Download"  (sets the badge colour)
+   type    : "Event" | "Product" | "Systems" | "Corporate" | "News" | "Download"  (sets the badge colour)
    layout  : "photo" = full-width picture (use a large image, 1600px+)
              "split" = text + framed picture (good for product shots or 640px images)
    short   : short label shown in the bottom tabs
@@ -235,6 +235,16 @@ const BANNERS = [
         ]
     },
     {
+        type: "Systems", layout: "split", image: "assets/img/brital/tb25-villa.webp",
+        short: "Brital systems",
+        title: "Slim sliding &amp; minimal folding <em>by Brital</em>.",
+        text: "TB-25 and TB-50 aluminium systems, fitted with MASTER Italy hardware.",
+        buttons: [
+            { label: "Discover the systems", href: "#brital", style: "blue" },
+            { label: "Ask for a quote", href: "#contact", style: "line", request: "business", topic: "Quotation for a project" }
+        ]
+    },
+    {
         type: "News", layout: "split", image: "assets/img/news-wislide.webp",
         short: "WiSlide 230V",
         title: "WiSlide, now in <em>230V</em>.",
@@ -244,12 +254,12 @@ const BANNERS = [
         ]
     },
     {
-        type: "Download", layout: "split", image: "assets/img/catalogue.webp", contain: true,
-        short: "Catalogue 2026",
-        title: "The <em>2026 catalogue</em> is here.",
-        text: "Full range and technical data, ready to download.",
+        type: "Download", layout: "split", image: "assets/img/master-catalogue-cover.webp", contain: true,
+        short: "Technical catalogue",
+        title: "The MASTER <em>technical catalogue</em>.",
+        text: "668 pages of products and technical data, ready to download.",
         buttons: [
-            { label: "Download PDF", href: "assets/media/windar-catalogue.pdf", style: "blue", download: true },
+            { label: "Download PDF", href: "assets/media/master-technical-catalogue-2023.pdf", style: "blue", download: true },
             { label: "Watch our video", href: "#about", style: "line" }
         ]
     }
@@ -1000,7 +1010,7 @@ $("#systemsGrid").innerHTML = Object.entries(SYSTEMS).map(([name, f]) => {
             <p>Every line and reference from MASTER Italy, with technical data and drawings.</p>
             <div class="family__actions family__actions--stack">
                 <a class="btn btn--blue" href="${esc(MASTER_CATALOGUE)}" target="_blank" rel="noopener">Online catalogue ${icon("i-out")}</a>
-                <a class="btn btn--line" href="assets/media/windar-catalogue.pdf" download>${icon("i-down")} Windar PDF 2026</a>
+                <a class="btn btn--line" href="assets/media/master-technical-catalogue-2023.pdf" download>${icon("i-down")} Technical catalogue (PDF)</a>
             </div>
         </div>
     </article>`;
@@ -1046,7 +1056,7 @@ $("#heroSearch").addEventListener("submit", e => {
 
 $("#footerSystems").innerHTML = Object.keys(SYSTEMS).map(name =>
     `<li><a href="#products" data-cat="${esc(name)}">${esc(name)}</a></li>`
-).join("");
+).join("") + `<li><a href="#brital">Brital aluminium systems</a></li>`;
 $("#footerSystems").addEventListener("click", e => {
     const a = e.target.closest("a");
     if (a) { e.preventDefault(); showCategory(a.dataset.cat); }

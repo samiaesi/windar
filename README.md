@@ -15,6 +15,7 @@ Open `index.html` in a browser, or serve the folder (e.g. `python -m http.server
 | 01 | About | Short description, company video, key figures, MASTER Italy link. |
 | 02 | Product categories | The 7 MASTER lines (Window, Sliding, Corner Joint, Door, Handle, Automation, Curtain Wall), product search. |
 | 03 | Product range | 39 references from the MASTER Italy catalogue (code, name, picture, product page), quote list. |
+| 04 | Aluminium systems by Brital | TB-25 Slim Sliding and TB-50 Minimal Folding (specs from the Brital brochures), quotation, brochures. |
 | 04 | Reference projects | Projects by country with details. |
 | 05 | News & events | Big 5 Dubai / Big 5 Saudi with countdown, add-to-calendar, meeting booking; product news. |
 | 06 | Sales network | Sales engineers by region, Sales Director. |
@@ -37,4 +38,4 @@ All content lists are at the top of `js/main.js`:
 - Confirm the product selection (39 references from the MASTER catalogue) and mark the best sellers
 - Real photos of the reference projects
 - MASTER Italy stand number at Big 5
-- Compressed catalogue PDF (45 MB) and company video (24 MB), or a YouTube link
+- Company video (24 MB): compressed file or YouTube link
