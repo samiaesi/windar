@@ -7,15 +7,27 @@
     <meta name="description" content="Windar Aluminium supplies precision accessories for aluminium windows, doors and sliding systems across the Gulf since 2007. Middle East subsidiary of MASTER Group Italy.">
     <meta name="author" content="Samia Medine">
     <meta name="theme-color" content="#16171a">
-    <link rel="icon" href="assets/img/favicon.ico">
+    <!-- Site address: update SITE URL here and in robots.txt / sitemap.xml when the windar.ae domain is connected -->
+    <link rel="canonical" href="https://windar.vercel.app/">
+
+    <!-- Icons -->
+    <link rel="icon" href="favicon.ico" sizes="48x48">
+    <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+    <link rel="manifest" href="site.webmanifest">
 
     <!-- Sharing (LinkedIn, WhatsApp, Facebook…) -->
     <meta property="og:type" content="website">
+    <meta property="og:url" content="https://windar.vercel.app/">
     <meta property="og:site_name" content="Windar Aluminium">
     <meta property="og:title" content="Windar Aluminium | Accessories for aluminium systems">
     <meta property="og:description" content="MASTER Italy hardware for aluminium windows, doors and sliding systems, supplied across the Gulf since 2007.">
-    <meta property="og:image" content="assets/img/hero-3.jpg">
+    <meta property="og:image" content="https://windar.vercel.app/assets/img/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Windar Aluminium, precision hardware for aluminium windows and doors, a company of MASTER Italy">
     <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://windar.vercel.app/assets/img/og-image.jpg">
 
     <!-- Company details for search engines -->
     <script type="application/ld+json">
@@ -24,6 +36,8 @@
         "@type": "Organization",
         "name": "Windar Aluminium",
         "description": "Supplier of aluminium accessories for windows and doors in the Gulf since 2007. Middle East subsidiary of MASTER Group Italy.",
+        "url": "https://windar.vercel.app/",
+        "logo": "https://windar.vercel.app/assets/icons/icon-512.png",
         "foundingDate": "2007",
         "email": "gulf@masteritaly.com",
         "telephone": "+971 4 379 1001",
@@ -40,7 +54,11 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@1&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@1&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"></noscript>
+
+    <!-- first banner picture, requested straight away -->
+    <link rel="preload" as="image" href="assets/img/hero-1.webp" imagesrcset="assets/img/hero-1-900.webp 900w, assets/img/hero-1.webp 1600w" imagesizes="100vw" fetchpriority="high">
 
     <link rel="stylesheet" href="css/style.css">
 </head>
@@ -198,7 +216,7 @@
                     <li><strong>GCC</strong><span>UAE · KSA · Kuwait</span></li>
                 </ul>
                 <a class="about-us__master" href="https://www.masteritaly.com/en/" target="_blank" rel="noopener">
-                    <img src="assets/img/master-italy-logo-dark.png" alt="MASTER — Hardware for windows and doors" width="800" height="205" loading="lazy">
+                    <img src="assets/img/master-italy-logo-dark-400.png" alt="MASTER — Hardware for windows and doors" width="400" height="103" loading="lazy">
                     <span><small>Part of MASTER Group Italy</small>Hardware for aluminium windows and doors, engineered in Italy since 1986 <svg><use href="#i-out"/></svg></span>
                 </a>
                 <div class="about-us__ctas">
@@ -436,19 +454,19 @@
         <h3 class="subhead" id="news">Product news</h3>
         <div class="news">
             <a class="post reveal" href="https://www.masteritaly.com" target="_blank" rel="noopener">
-                <div class="post__img"><img src="assets/img/news-ween-hide.jpg" alt="" loading="lazy"></div>
+                <div class="post__img"><img src="assets/img/news-ween-hide.webp" alt="" loading="lazy"></div>
                 <span class="post__tag">Hinges</span>
                 <h3>WEEN HIDE 180: the invisible solution designed to last</h3>
                 <p>The latest innovation in long-lasting, invisible solutions for your projects.</p>
             </a>
             <a class="post reveal" href="https://www.masteritaly.com" target="_blank" rel="noopener">
-                <div class="post__img"><img src="assets/img/news-wislide.jpg" alt="" loading="lazy"></div>
+                <div class="post__img"><img src="assets/img/news-wislide.webp" alt="" loading="lazy"></div>
                 <span class="post__tag">Automation</span>
                 <h3>New 230V version of the Master WiSlide actuator</h3>
                 <p>An upgraded 230 Volt actuator for smoother and more efficient automation.</p>
             </a>
             <a class="post reveal" href="https://www.masteritaly.com" target="_blank" rel="noopener">
-                <div class="post__img"><img src="assets/img/news-boost.jpg" alt="" loading="lazy"></div>
+                <div class="post__img"><img src="assets/img/news-boost.webp" alt="" loading="lazy"></div>
                 <span class="post__tag">Sliding</span>
                 <h3>Master BOOST: the double modular trolley up to 350 kg</h3>
                 <p>High-capacity modular trolleys, fully adjustable, handling up to 350 kg.</p>
@@ -470,7 +488,7 @@
 
         <div class="network reveal">
             <div class="regions" role="tablist" aria-label="Regions" id="regions"></div>
-            <article class="rep" id="rep" role="tabpanel" aria-live="polite"></article>
+            <div class="rep" id="rep" role="tabpanel" aria-live="polite"></div>
         </div>
         <div class="director reveal" id="director"></div>
         <p class="network__finder reveal">Not sure who covers your area? <button class="link-btn" data-sales>Find your contact by country</button></p>
@@ -582,9 +600,9 @@
                     <span class="logo__win">WIN</span><span class="logo__dar">DAR</span>
                 </a>
                 <span class="footer__sep" aria-hidden="true"></span>
-                <a href="https://www.masteritaly.com/en/" target="_blank" rel="noopener" class="footer__master" aria-label="MASTER Italy – hardware for windows and doors">
+                <a href="https://www.masteritaly.com/en/" target="_blank" rel="noopener" class="footer__master" aria-label="A company of MASTER Italy, hardware for windows and doors">
                     <small>A company of</small>
-                    <img src="assets/img/master-italy-logo.png" alt="MASTER — Hardware for windows and doors" width="800" height="205" loading="lazy">
+                    <img src="assets/img/master-italy-logo-400.png" alt="MASTER — Hardware for windows and doors" width="400" height="103" loading="lazy">
                 </a>
             </div>
             <p class="footer__claim">Precision hardware <em>for aluminium</em> systems, engineered in Italy and supplied across the Gulf since 2007.</p>
@@ -598,11 +616,11 @@
 
         <div class="footer__grid">
             <div>
-                <h4>Product lines</h4>
+                <h3 class="footer__h">Product lines</h3>
                 <ul id="footerSystems"></ul>
             </div>
             <div>
-                <h4>Company</h4>
+                <h3 class="footer__h">Company</h3>
                 <ul>
                     <li><a href="#about">About Windar</a></li>
                     <li><a href="#quality">Quality &amp; certifications</a></li>
@@ -613,7 +631,7 @@
                 </ul>
             </div>
             <div>
-                <h4>Support</h4>
+                <h3 class="footer__h">Support</h3>
                 <ul>
                     <li><a href="#contact" data-request="business">Business request</a></li>
                     <li><a href="#contact" data-request="technical">Technical request</a></li>
@@ -624,7 +642,7 @@
                 </ul>
             </div>
             <div class="footer__office">
-                <h4>Gulf head office</h4>
+                <h3 class="footer__h">Gulf head office</h3>
                 <address>
                     Windar Aluminium<br>
                     1 Sheikh Zayed Rd, Al Quoz Industrial 1<br>
@@ -682,6 +700,6 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="js/main.js"></script>
+<script src="js/main.js" defer></script>
 </body>
 </html>

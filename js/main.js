@@ -47,7 +47,7 @@ const SYSTEMS = {
         catalogue: "https://www.masteritaly.com/catalogo/shop/porte/"
     },
     "Automation Line": {
-        icon: "i-auto", image: "assets/img/news-wislide.jpg", photo: true, badge: "New · WiSlide 230V",
+        icon: "i-auto", image: "assets/img/news-wislide.webp", photo: true, badge: "New · WiSlide 230V",
         text: "Electric actuators for sliding frames, transoms and projecting windows.",
         lines: ["WISLIDE", "CLOUD", "APRO"],
         catalogue: "https://www.masteritaly.com/catalogo/shop/automazione/"
@@ -195,7 +195,7 @@ const WHATSAPP = {
 const ABOUT_VIDEO = {
     type: "file",
     src: "assets/media/windar.mp4",
-    poster: "assets/img/hero-3.jpg",
+    poster: "assets/img/hero-3-900.webp",
     title: "Windar Aluminium in the Gulf",
     duration: ""
 };
@@ -215,7 +215,7 @@ const ABOUT_VIDEO = {
    gets its own slide automatically, right after the first slide, until the event ends. */
 const BANNERS = [
     {
-        type: "Corporate", layout: "photo", image: "assets/img/hero-1.jpg",
+        type: "Corporate", layout: "photo", image: "assets/img/hero-1.webp",
         short: "Precision hardware",
         title: "Precision hardware <em>for aluminium</em> windows&nbsp;&amp;&nbsp;doors.",
         text: "MASTER Italy accessories, supplied across the Gulf since 2007.",
@@ -225,7 +225,7 @@ const BANNERS = [
         ]
     },
     {
-        type: "Product", layout: "split", image: "assets/img/news-ween-hide.jpg",
+        type: "Product", layout: "split", image: "assets/img/news-ween-hide.webp",
         short: "WEEN HIDE 180",
         title: "WEEN HIDE 180, <em>the invisible</em> hinge.",
         text: "The latest MASTER concealed solution, now available in the Gulf.",
@@ -235,7 +235,7 @@ const BANNERS = [
         ]
     },
     {
-        type: "News", layout: "split", image: "assets/img/news-wislide.jpg",
+        type: "News", layout: "split", image: "assets/img/news-wislide.webp",
         short: "WiSlide 230V",
         title: "WiSlide, now in <em>230V</em>.",
         text: "The MASTER actuator for sliding shutters, smoother and more efficient.",
@@ -301,7 +301,7 @@ const EVENTS = [
         name: "Big 5 Global", edition: "2026", short: "Big 5 Dubai",
         city: "Dubai", country: "UAE", venue: "Dubai World Trade Centre",
         start: "2026-11-23", end: "2026-11-26", exhibitor: "MASTER Italy", stand: "",
-        image: "assets/img/hero-3.jpg",
+        image: "assets/img/hero-3.webp",
         website: "https://www.big5global.com/",
         text: "MASTER Italy, our parent company, exhibits at the region's largest construction event. Meet the Windar team on the stand and discover the latest accessories for aluminium windows, doors and sliding systems.",
         banner: true
@@ -310,7 +310,7 @@ const EVENTS = [
         name: "Big 5 Construct Saudi", edition: "2027 · Architecture & Finishes", short: "Big 5 Saudi",
         city: "Riyadh", country: "KSA", venue: "Riyadh Front Exhibition & Conference Center",
         start: "2027-05-24", end: "2027-05-27", exhibitor: "MASTER Italy", stand: "",
-        image: "assets/img/hero-2.jpg",
+        image: "assets/img/hero-2.webp",
         website: "https://www.big5constructsaudi.com/",
         text: "MASTER Italy, our parent company, exhibits at Saudi Arabia's largest construction event. Meet our KSA team on the stand in Riyadh.",
         banner: true
@@ -325,6 +325,8 @@ const icon = id => `<svg><use href="#${id}"/></svg>`;
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const countIn = cat => PRODUCTS.filter(p => p.category === cat).length;
 const pad = n => String(n).padStart(2, "0");
+// large photos exist in two sizes: name.webp (1600px) and name-900.webp (phones)
+const srcset = path => /\/hero-\d\.webp$/.test(path) ? `${path.replace(".webp", "-900.webp")} 900w, ${path} 1600w` : "";
 
 const store = {
     get(key, fallback) { try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; } },
@@ -750,11 +752,11 @@ megaItem.addEventListener("focusout", e => { if (!megaItem.contains(e.relatedTar
             ? `<article class="slide slide--split" ${label}>
                    <div class="container slide__inner">
                        ${copy}
-                       <figure class="slide__figure${s.contain ? " slide__figure--contain" : ""}"><img src="${esc(s.image)}" alt="" ${i ? 'decoding="async"' : 'fetchpriority="high"'}></figure>
+                       <figure class="slide__figure${s.contain ? " slide__figure--contain" : ""}"><img ${i ? "data-" : ""}src="${esc(s.image)}" alt="" decoding="async"></figure>
                    </div>
                </article>`
             : `<article class="slide slide--photo" ${label}>
-                   <div class="slide__bg"><img src="${esc(s.image)}" alt="" ${i ? 'decoding="async"' : 'fetchpriority="high"'}></div>
+                   <div class="slide__bg"><img ${i ? "data-" : ""}src="${esc(s.image)}" ${srcset(s.image) ? `${i ? "data-" : ""}srcset="${srcset(s.image)}" sizes="100vw"` : ""} alt="" ${i ? 'decoding="async"' : 'fetchpriority="high"'}></div>
                    <div class="slide__shade"></div>
                    <div class="container slide__inner">${copy}</div>
                </article>`;
@@ -778,10 +780,20 @@ megaItem.addEventListener("focusout", e => { if (!megaItem.contains(e.relatedTar
     root.style.setProperty("--dur", BANNER_DELAY + "ms");
     if (slides.length < 2) $(".banner__controls", root).hidden = true;
 
+    // pictures of the next slides are loaded after the page, so the first one shows up faster
+    const loadSlide = el => $$("img[data-src]", el).forEach(img => {
+        if (img.dataset.srcset) img.srcset = img.dataset.srcset;
+        img.src = img.dataset.src;
+        img.removeAttribute("data-src");
+        img.removeAttribute("data-srcset");
+    });
+    window.addEventListener("load", () => setTimeout(() => $$(".slide", root).forEach(loadSlide), 800));
+
     function go(n) {
         const next = (n + slides.length) % slides.length;
         if (next === current) return;
         current = next;
+        loadSlide(els[current]);
         els.forEach((el, i) => {
             el.classList.toggle("is-active", i === current);
             el.setAttribute("aria-hidden", String(i !== current));
@@ -1217,7 +1229,7 @@ $("#drawerList").addEventListener("click", e => {
             return `
             <article class="event reveal${n === 0 ? " is-next" : ""}${live ? " is-live" : ""}">
                 <div class="event__media">
-                    <img src="${esc(e.image)}" alt="" loading="lazy">
+                    <img src="${esc(e.image)}" ${srcset(e.image) ? `srcset="${srcset(e.image)}" sizes="(max-width: 960px) 100vw, 45vw"` : ""} alt="" loading="lazy">
                     <div class="event__date">${dateBlock(e)}</div>
                     <span class="event__status">${live ? "Happening now" : n === 0 ? "Next event" : "Upcoming"}</span>
                 </div>

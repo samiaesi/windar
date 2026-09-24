@@ -1,0 +1,13 @@
+{
+  "name": "Windar Aluminium",
+  "short_name": "Windar",
+  "description": "MASTER Italy accessories for aluminium windows and doors, supplied across the Gulf since 2007.",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#f6f5f2",
+  "theme_color": "#16171a",
+  "icons": [
+    { "src": "/assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
