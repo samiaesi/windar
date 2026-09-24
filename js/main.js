@@ -1568,17 +1568,31 @@ $("#year").textContent = new Date().getFullYear();
    so the 58 MB catalogue opens in a few seconds.
    ========================================================= */
 const READER = {
-    pdf: "assets/media/master-technical-catalogue-2023.pdf",
     lib: "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js",
     worker: "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js",
-    // chapters of the MASTER catalogue (its own index), with their PDF page
-    chapters: [
+    // documents that open in the reader: link with data-read="<key>", or share windar…/#catalogue-<key>
+    docs: {
+        master: {
+            kicker: "MASTER Italy", title: "Technical catalogue", size: "58 MB",
+            pdf: "assets/media/master-technical-catalogue-2023.pdf",
+            // chapters of the MASTER catalogue (its own index), with their PDF page
+            chapters: [
         ["Introduction", 3], ["Corner", 65], ["Joint", 85], ["Latches and junctions", 91],
         ["Various accessories", 121], ["Bottom and top hung", 141], ["Pivot", 191],
         ["Handles and cremone-bolts", 201], ["Closing", 293], ["Tilt and turn", 313],
         ["Windows automation", 421], ["Hinges", 453], ["Big handles", 499], ["Sliding units", 509],
         ["Lift and slide", 581], ["Tilt and slide", 597], ["Folding opening", 609], ["Notes", 664]
-    ]
+            ]
+        },
+        tb25: {
+            kicker: "Brital systems", title: "TB-25 Slim Sliding", size: "10 MB",
+            pdf: "assets/media/brital-tb25-slim-sliding.pdf", chapters: []
+        },
+        tb50: {
+            kicker: "Brital systems", title: "TB-50 Minimal Folding", size: "9 MB",
+            pdf: "assets/media/brital-tb50-minimal-folding.pdf", chapters: []
+        }
+    }
 };
 
 (function reader() {
@@ -1588,11 +1602,10 @@ const READER = {
     const pageInput = $("#readerPage"), total = $("#readerTotal"), chapter = $("#readerChapter");
     const ZOOMS = [.6, .8, 1, 1.25, 1.5, 2];
     const FLIP_MS = 700;
-    let doc = null, loading = null, count = 0, ratio = .707, current = 1, lastFocus = null;
+    let doc = null, loading = null, lib = null, count = 0, ratio = .707, current = 1, lastFocus = null;
+    let key = null, active = null;
     let mode = "book", zoom = 2, sheets = [], observer = null, anchor = null;
 
-    chapter.innerHTML = `<option value="">Chapters</option>` +
-        READER.chapters.map(([name, p]) => `<option value="${p}">${esc(name)} · p. ${p}</option>`).join("");
     try { if (localStorage.getItem("windar-reader") === "scroll") mode = "scroll"; } catch (e) { /* private mode */ }
 
     const loadScript = src => new Promise((ok, fail) => {
@@ -1603,9 +1616,10 @@ const READER = {
         document.head.appendChild(el);
     });
 
-    const load = () => loading ||= loadScript(READER.lib).then(() => {
+    const load = () => loading ||= (lib ||= loadScript(READER.lib).then(() => {
         pdfjsLib.GlobalWorkerOptions.workerSrc = READER.worker;
-        return pdfjsLib.getDocument({ url: READER.pdf, disableAutoFetch: true, disableStream: true, rangeChunkSize: 262144 }).promise;
+    })).then(() => {
+        return pdfjsLib.getDocument({ url: active.pdf, disableAutoFetch: true, disableStream: true, rangeChunkSize: 262144 }).promise;
     }).then(async d => {
         doc = d;
         count = d.numPages;
@@ -1646,7 +1660,7 @@ const READER = {
     function sync() {
         pageInput.value = current;
         let ch = "";
-        READER.chapters.forEach(([, p]) => { if (p <= current) ch = p; });
+        active.chapters.forEach(([, p]) => { if (p <= current) ch = p; });
         chapter.value = ch;
     }
 
@@ -1787,25 +1801,56 @@ const READER = {
         else { buildScroll(); requestAnimationFrame(() => goTo(keep)); }
     }
 
-    function open(page) {
+    const hashOf = k => k === "master" ? "#catalogue" : "#catalogue-" + k;
+    const keyOf = hash => hash === "#catalogue" ? "master" : (hash.match(/^#catalogue-(\w+)$/) || [])[1];
+
+    // another document: the reader starts again from its first page
+    function use(k) {
+        if (k === key) return;
+        key = k;
+        active = READER.docs[k];
+        doc = null;
+        loading = null;
+        cache.clear();
+        if (observer) observer.disconnect();
+        observer = null;
+        sheets = [];
+        pages.innerHTML = "";
+        $$(".book__page", book).forEach(el => el.replaceChildren());
+        $$(".book__leaf", book).forEach(el => el.remove());
+        B.busy = false;
+        current = 1;
+        $("#readerTitle").innerHTML = `<small>${esc(active.kicker)}</small>${esc(active.title)}`;
+        const dl = $("#readerDownload");
+        dl.href = active.pdf;
+        dl.title = `Download the PDF (${active.size})`;
+        dl.setAttribute("aria-label", dl.title);
+        chapter.closest("label").hidden = !active.chapters.length;
+        chapter.innerHTML = `<option value="">Chapters</option>` +
+            active.chapters.map(([name, p]) => `<option value="${p}">${esc(name)} · p. ${p}</option>`).join("");
+    }
+
+    function open(k = "master") {
+        if (!READER.docs[k]) k = "master";
+        use(k);
         lastFocus = document.activeElement;
         root.hidden = false;
         document.documentElement.classList.add("reader-open");
         view.focus({ preventScroll: true });
-        if (location.hash !== "#catalogue") history.replaceState(null, "", "#catalogue");
+        if (location.hash !== hashOf(k)) history.replaceState(null, "", hashOf(k));
         root.dataset.mode = mode;
-        if (doc) return goTo(page || current);
-        status.textContent = "Opening the catalogue…";
-        load().then(() => { status.textContent = ""; setMode(mode, page || 1); }).catch(() => {
+        if (doc) return goTo(current);
+        status.textContent = `Opening ${active.title}…`;
+        load().then(() => { status.textContent = ""; setMode(mode, 1); }).catch(() => {
             loading = null;
-            status.innerHTML = `The catalogue could not be opened here. <a href="${READER.pdf}" download>Download the PDF (58 MB)</a>`;
+            status.innerHTML = `This document could not be opened here. <a href="${esc(active.pdf)}" download>Download the PDF (${esc(active.size)})</a>`;
         });
     }
 
     function close() {
         root.hidden = true;
         document.documentElement.classList.remove("reader-open");
-        if (location.hash === "#catalogue") history.replaceState(null, "", location.pathname + location.search);
+        if (keyOf(location.hash)) history.replaceState(null, "", location.pathname + location.search);
         if (lastFocus) lastFocus.focus({ preventScroll: true });
     }
 
@@ -1813,7 +1858,7 @@ const READER = {
         const link = e.target.closest("[data-read]");
         if (!link || e.ctrlKey || e.metaKey || e.shiftKey) return;
         e.preventDefault();
-        open(+link.dataset.read || 0);
+        open(link.dataset.read || "master");
     });
     $$("[data-close-reader]", root).forEach(el => el.addEventListener("click", close));
     $$("[data-mode]", root).forEach(b => b.addEventListener("click", () => b.dataset.mode !== mode && setMode(b.dataset.mode)));
@@ -1862,6 +1907,6 @@ const READER = {
     });
 
     // a shared link to windar…/#catalogue opens the catalogue straight away
-    if (location.hash === "#catalogue") open(1);
-    window.addEventListener("hashchange", () => { if (location.hash === "#catalogue" && root.hidden) open(); });
+    if (keyOf(location.hash)) open(keyOf(location.hash));
+    window.addEventListener("hashchange", () => { if (keyOf(location.hash) && root.hidden) open(keyOf(location.hash)); });
 })();

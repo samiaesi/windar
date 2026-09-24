@@ -5,6 +5,11 @@
   <!-- two panels meeting at one slim interlock -->
   <rect x="48" y="60" width="194" height="124" stroke-width="1.8"/>
   <rect x="141" y="56" width="8" height="132" fill="#16408f" stroke="none" rx="1.5"/>
+  <!-- interlock dimension: 25 mm -->
+  <path d="M141 44V30M149 44V30" stroke-width="1.2"/>
+  <path d="M120 37h21M170 37h-21" stroke-width="1.4"/>
+  <path d="M135 33l6 4-6 4M155 33l-6 4 6 4" stroke-width="1.4"/>
+  <text x="176" y="41" font-family="monospace" font-size="12.5" fill="#16408f" stroke="none">INTERLOCK 25 mm</text>
   <!-- glass reflections -->
   <path d="M62 150l26-26M62 164l40-40M170 150l26-26M170 164l40-40" stroke-width="1.2" opacity=".45"/>
   <!-- sliding arrows -->
