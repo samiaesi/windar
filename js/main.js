@@ -123,7 +123,7 @@ const PRODUCTS = [
    photo    : optional (e.g. "assets/img/team/ahmed-goda.jpg"); without a photo, initials are shown
    whatsapp : true only if the phone number is a mobile that uses WhatsApp */
 const OFFICE_PHONE = "+971 4 379 1001";
-const OFFICE_EMAIL = "gulf@masteritaly.com";
+const OFFICE_EMAIL = "info@windar.ae";
 
 const REPS = [
     { id: "abudhabi", name: "Ahmed Goda",           title: "Sales Engineer", area: "Abu Dhabi · Al Ain",      region: "Abu Dhabi",         country: "UAE", phone: OFFICE_PHONE, email: OFFICE_EMAIL, photo: "", whatsapp: false },
