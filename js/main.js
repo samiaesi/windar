@@ -260,7 +260,7 @@ const BANNERS = [
         text: "668 pages of products and technical data, to read online or download.",
         buttons: [
             { label: "Read online", href: "assets/media/master-technical-catalogue-2023.pdf", style: "blue", read: true },
-            { label: "Download PDF", href: "assets/media/master-technical-catalogue-2023.pdf", style: "line", download: true }
+            { label: "Download PDF", href: "https://www.masteritaly.com/wp-content/uploads/2023/05/CATALOGUE_WEB_2023_18_05.pdf", style: "line", download: true, external: true }
         ]
     }
 ];
@@ -1016,7 +1016,7 @@ $("#systemsGrid").innerHTML = Object.entries(SYSTEMS).map(([name, f]) => {
             <div class="family__actions family__actions--stack">
                 <a class="btn btn--blue" href="${esc(MASTER_CATALOGUE)}" target="_blank" rel="noopener">Online catalogue ${icon("i-out")}</a>
                 <a class="btn btn--line" href="assets/media/master-technical-catalogue-2023.pdf" data-read>${icon("i-book")} Read the catalogue here</a>
-                <a class="family__pdf" href="assets/media/master-technical-catalogue-2023.pdf" download>${icon("i-down")} Download the PDF (58 MB)</a>
+                <a class="family__pdf" href="https://www.masteritaly.com/wp-content/uploads/2023/05/CATALOGUE_WEB_2023_18_05.pdf" target="_blank" rel="noopener">${icon("i-down")} Download the complete PDF (115 MB)</a>
             </div>
         </div>
     </article>`;
@@ -1570,7 +1570,7 @@ $("#year").textContent = new Date().getFullYear();
 /* =========================================================
    Catalogue reader: the PDF read inside the site.
    Only the pages on screen are downloaded (the server sends parts of the file),
-   so the 58 MB catalogue opens in a few seconds.
+   so the catalogue (58 MB light copy) opens in a few seconds.
    ========================================================= */
 const READER = {
     lib: "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js",
@@ -1581,13 +1581,16 @@ const READER = {
     // documents that open in the reader: link with data-read="<key>", or share windar…/#catalogue-<key>
     docs: {
         master: {
-            kicker: "MASTER Italy", title: "Technical catalogue", size: "58 MB",
+            kicker: "MASTER Italy", title: "Technical catalogue", size: "115 MB",
             pdf: "assets/media/master-technical-catalogue-2023.pdf",
             // search: references, product names and words -> pages (built from the catalogue text)
             index: "assets/media/master-catalogue-index.json",
             // every page on its own, in full quality (from the original catalogue): "Download these pages"
             page: n => `assets/media/catalogue-pages/p${String(n).padStart(3, "0")}.pdf`,
-            full: "58 MB · lighter quality",
+            // "Whole catalogue": the complete original (115 MB), as published by MASTER Italy;
+            // the lighter copy above (pdf) is only used to read it on the site
+            download: "https://www.masteritaly.com/wp-content/uploads/2023/05/CATALOGUE_WEB_2023_18_05.pdf",
+            full: "115 MB · full quality · from masteritaly.com",
             // chapters of the MASTER catalogue (its own index), with their PDF page
             chapters: [
         ["Introduction", 3], ["Corner", 65], ["Joint", 85], ["Latches and junctions", 91],
@@ -1835,7 +1838,11 @@ const READER = {
         B.busy = false;
         current = 1;
         $("#readerTitle").innerHTML = `<small>${esc(active.kicker)}</small>${esc(active.title)}`;
-        $("#readerDownload").href = active.pdf;
+        const whole = $("#readerDownload");
+        whole.href = active.download || active.pdf;
+        // a file on another site opens in a new tab (browsers only save files of this site directly)
+        if (active.download) { whole.removeAttribute("download"); whole.target = "_blank"; whole.rel = "noopener"; }
+        else { whole.setAttribute("download", ""); whole.removeAttribute("target"); }
         $("#readerDlSize").textContent = active.full || active.size;
         toggleDl(false);
         chapter.closest("label").hidden = !active.chapters.length;
@@ -2009,7 +2016,7 @@ const READER = {
         status.textContent = `Opening ${active.title}…`;
         load().then(() => { status.textContent = ""; setMode(mode, 1); }).catch(() => {
             loading = null;
-            status.innerHTML = `This document could not be opened here. <a href="${esc(active.pdf)}" download>Download the PDF (${esc(active.size)})</a>`;
+            status.innerHTML = `This document could not be opened here. <a href="${esc(active.download || active.pdf)}" ${active.download ? 'target="_blank" rel="noopener"' : "download"}>Download the PDF (${esc(active.size)})</a>`;
         });
     }
 
