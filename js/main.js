@@ -1653,6 +1653,7 @@ const READER = {
         const w = Math.round(width * Math.min(window.devicePixelRatio || 1, 2));
         const key = n + "@" + w;
         if (!cache.has(key)) {
+            if (!doc) return Promise.reject(new Error("no document open"));
             cache.set(key, doc.getPage(n).then(async page => {
                 const vp = page.getViewport({ scale: w / page.getViewport({ scale: 1 }).width });
                 const canvas = document.createElement("canvas");
@@ -1660,7 +1661,7 @@ const READER = {
                 canvas.height = Math.floor(vp.height);
                 await page.render({ canvasContext: canvas.getContext("2d"), viewport: vp }).promise;
                 return canvas;
-            }));
+            }).catch(e => { cache.delete(key); throw e; }));
             if (cache.size > 24) cache.delete(cache.keys().next().value);
         }
         return cache.get(key);
@@ -1709,7 +1710,8 @@ const READER = {
         slot.classList.toggle("is-empty", !n);
     }
     function preload(s) {
-        [s - 1, s + 1, s + 2].forEach(x => pagesOf(x).forEach(n => { if (n > 0 && n <= count) render(n, B.pw); }));
+        // pages around are prepared in advance; failures are ignored (e.g. another document was opened meanwhile)
+        [s - 1, s + 1, s + 2].forEach(x => pagesOf(x).forEach(n => { if (n > 0 && n <= count) render(n, B.pw).catch(() => {}); }));
     }
 
     async function showSpread(s, want) {
