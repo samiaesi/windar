@@ -167,13 +167,16 @@ const QUOTE_EMAIL = OFFICE_EMAIL;
    endpoint : optional URL of a form service (e.g. Formspree "https://formspree.io/f/xxxx").
               Empty = the visitor's email app opens with the request filled in.
               Set = the form is sent directly from the page, no email app needed. */
+// TEMPORARY: form requests go to info@brital.ae while the form is being tested.
+// Put back OFFICE_EMAIL (info@windar.ae) here and in "technical" once the test is done.
+const FORM_EMAIL = "info@brital.ae";
 const CONTACT = {
     business: {
-        email: OFFICE_EMAIL,
+        email: FORM_EMAIL,
         topics: ["Quotation for a project", "Prices & availability", "Become a customer", "Meeting at an event", "Partnership & distribution", "Other"]
     },
     technical: {
-        email: OFFICE_EMAIL,
+        email: FORM_EMAIL,
         topics: ["Choosing the right product", "Compatibility with an aluminium system", "Installation & adjustment", "Technical drawings & data", "After-sales support", "Other"]
     },
     endpoint: "https://formspree.io/f/mnpnzlgl" // Formspree form "Windar website" (account info@windar.ae)
