@@ -2813,3 +2813,50 @@ html.reader-open, html.reader-open body { overflow: hidden; }
     .reader__back { width: 40px; padding: 0; justify-content: center; margin-right: 0; }
     .reader__back span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 }
+
+/* reader: download menu */
+.reader__dl { position: relative; }
+.reader__dl .round[aria-expanded="true"] { background: var(--white); color: var(--graphite); border-color: var(--white); }
+.reader__dlmenu {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    z-index: 6;
+    width: min(340px, calc(100vw - 24px));
+    padding: 8px;
+    border-radius: 18px;
+    background: var(--white);
+    color: var(--graphite);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, .45);
+}
+.reader__dlmenu[hidden] { display: none; }
+.dl-pages { padding: 12px 12px 10px; border-radius: 12px; background: var(--blue-soft); }
+.dl-pages__title { display: grid; gap: 2px; margin: 0 0 12px; }
+.dl-pages__title strong { font-size: 15px; }
+.dl-pages__title small, .dl-all small { font-size: 12.5px; color: var(--muted); }
+.dl-pages__range { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.dl-pages__range label { display: inline-flex; align-items: center; gap: 6px; font-size: 13.5px; color: var(--text); }
+.dl-pages__range input {
+    width: 62px;
+    height: 38px;
+    padding: 0 6px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--white);
+    font: 500 14px var(--mono);
+    text-align: center;
+    -moz-appearance: textfield;
+}
+.dl-pages__range input::-webkit-inner-spin-button, .dl-pages__range input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+.dl-pages__range .btn { height: 38px; margin-left: auto; padding: 0 16px; font-size: 14px; }
+.dl-pages__note { margin: 10px 0 0; font-size: 12.5px; color: var(--ok); }
+.dl-pages__note:empty { display: none; }
+.dl-pages__note.is-error { color: var(--error); }
+.dl-all { display: flex; align-items: center; gap: 12px; margin-top: 6px; padding: 12px; border-radius: 12px; }
+.dl-all:hover { background: var(--bg); }
+.dl-all svg { flex: none; width: 18px; height: 18px; color: var(--blue); }
+.dl-all span { display: grid; gap: 2px; }
+.dl-all strong { font-size: 14.5px; }
+@media (max-width: 760px) {
+    .reader__dlmenu { position: fixed; top: 118px; left: 12px; right: 12px; width: auto; }
+}

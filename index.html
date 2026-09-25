@@ -797,7 +797,24 @@
             <button class="round" id="readerOut" aria-label="Zoom out"><svg><use href="#i-minus"/></svg></button>
             <button class="round" id="readerIn" aria-label="Zoom in"><svg><use href="#i-plus"/></svg></button>
         </div>
-        <a class="round" id="readerDownload" href="assets/media/master-technical-catalogue-2023.pdf" download aria-label="Download the PDF (58 MB)" title="Download the PDF (58 MB)"><svg><use href="#i-down"/></svg></a>
+        <div class="reader__dl">
+            <button class="round" id="readerDl" aria-label="Download" title="Download" aria-expanded="false" aria-controls="readerDlMenu"><svg><use href="#i-down"/></svg></button>
+            <div class="reader__dlmenu" id="readerDlMenu" hidden>
+                <form class="dl-pages" id="readerDlForm">
+                    <p class="dl-pages__title"><strong>These pages</strong><small>Full quality PDF, sharp when printed or zoomed</small></p>
+                    <div class="dl-pages__range">
+                        <label>From <input type="number" id="dlFrom" min="1" inputmode="numeric"></label>
+                        <label>to <input type="number" id="dlTo" min="1" inputmode="numeric"></label>
+                        <button type="submit" class="btn btn--blue">Download</button>
+                    </div>
+                    <p class="dl-pages__note" id="readerDlNote" role="status"></p>
+                </form>
+                <a class="dl-all" id="readerDownload" href="assets/media/master-technical-catalogue-2023.pdf" download>
+                    <svg><use href="#i-down"/></svg>
+                    <span><strong>Whole catalogue</strong><small id="readerDlSize">58 MB · lighter quality</small></span>
+                </a>
+            </div>
+        </div>
     </div>
     <div class="reader__search" id="readerSearch" hidden>
         <form class="reader__form" id="readerSearchForm" role="search">

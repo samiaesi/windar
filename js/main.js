@@ -1575,6 +1575,9 @@ $("#year").textContent = new Date().getFullYear();
 const READER = {
     lib: "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js",
     worker: "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js",
+    // joins the chosen pages into one PDF, in the visitor's browser
+    merge: "https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js",
+    maxPages: 30,
     // documents that open in the reader: link with data-read="<key>", or share windar…/#catalogue-<key>
     docs: {
         master: {
@@ -1582,6 +1585,9 @@ const READER = {
             pdf: "assets/media/master-technical-catalogue-2023.pdf",
             // search: references, product names and words -> pages (built from the catalogue text)
             index: "assets/media/master-catalogue-index.json",
+            // every page on its own, in full quality (from the original catalogue): "Download these pages"
+            page: n => `assets/media/catalogue-pages/p${String(n).padStart(3, "0")}.pdf`,
+            full: "58 MB · lighter quality",
             // chapters of the MASTER catalogue (its own index), with their PDF page
             chapters: [
         ["Introduction", 3], ["Corner", 65], ["Joint", 85], ["Latches and junctions", 91],
@@ -1829,10 +1835,9 @@ const READER = {
         B.busy = false;
         current = 1;
         $("#readerTitle").innerHTML = `<small>${esc(active.kicker)}</small>${esc(active.title)}`;
-        const dl = $("#readerDownload");
-        dl.href = active.pdf;
-        dl.title = `Download the PDF (${active.size})`;
-        dl.setAttribute("aria-label", dl.title);
+        $("#readerDownload").href = active.pdf;
+        $("#readerDlSize").textContent = active.full || active.size;
+        toggleDl(false);
         chapter.closest("label").hidden = !active.chapters.length;
         $("#readerFind").hidden = !active.index;
         toggleSearch(false);
@@ -1919,6 +1924,73 @@ const READER = {
         if (matchMedia("(max-width: 760px)").matches) toggleSearch(false);
     });
 
+    /* ---------- Download: chosen pages in full quality, or the whole PDF ---------- */
+    const dlMenu = $("#readerDlMenu"), dlNote = $("#readerDlNote"), dlFrom = $("#dlFrom"), dlTo = $("#dlTo");
+    let merger = null;
+
+    function toggleDl(show = dlMenu.hidden) {
+        dlMenu.hidden = !show;
+        $("#readerDl").setAttribute("aria-expanded", show);
+        if (!show) return;
+        // the pages on screen: both pages of the open book, or the current page
+        let [a, b] = mode === "book" && B.double ? pagesOf(B.spread) : [current, current];
+        a ||= b; b ||= a;
+        dlFrom.max = dlTo.max = count;
+        dlFrom.value = a;
+        dlTo.value = b;
+        dlNote.textContent = "";
+        dlNote.classList.remove("is-error");
+    }
+
+    const saveFile = (blob, name) => {
+        const url = URL.createObjectURL(blob);
+        const link = Object.assign(document.createElement("a"), { href: url, download: name });
+        dlMenu.appendChild(link); // inside the menu, so this click does not close it
+        link.click();
+        link.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 4000);
+    };
+
+    async function downloadPages(a, b) {
+        a = Math.min(Math.max(1, a | 0), count);
+        b = Math.min(Math.max(1, b | 0), count);
+        if (a > b) [a, b] = [b, a];
+        const note = (text, error) => { dlNote.textContent = text; dlNote.classList.toggle("is-error", !!error); };
+        if (b - a + 1 > READER.maxPages)
+            return note(`Up to ${READER.maxPages} pages at a time. For more, download the whole catalogue.`, true);
+        const name = `MASTER-technical-catalogue-p${a}${b > a ? "-" + b : ""}.pdf`;
+        note(`Preparing ${b > a ? `pages ${a}–${b}` : `page ${a}`}…`);
+        try {
+            const nums = Array.from({ length: b - a + 1 }, (_, i) => a + i);
+            const files = await Promise.all(nums.map(n => fetch(active.page(n)).then(r => { if (!r.ok) throw r; return r.arrayBuffer(); })));
+            if (files.length === 1) {
+                saveFile(new Blob([files[0]], { type: "application/pdf" }), name);
+            } else {
+                await (merger ||= loadScript(READER.merge).catch(e => { merger = null; throw e; }));
+                const out = await PDFLib.PDFDocument.create();
+                out.setTitle(`MASTER Italy technical catalogue, pages ${a}–${b}`);
+                for (const bytes of files) {
+                    const src = await PDFLib.PDFDocument.load(bytes);
+                    (await out.copyPages(src, src.getPageIndices())).forEach(p => out.addPage(p));
+                }
+                saveFile(new Blob([await out.save()], { type: "application/pdf" }), name);
+            }
+            note(`Downloaded: ${name}`);
+        } catch (e) {
+            note("The pages could not be prepared. Please try again, or download the whole catalogue.", true);
+        }
+    }
+
+    $("#readerDl").addEventListener("click", () => {
+        // a document without separate pages: the button downloads it straight away
+        if (!active.page) return $("#readerDownload").click();
+        toggleDl();
+    });
+    $("#readerDlForm").addEventListener("submit", e => { e.preventDefault(); downloadPages(+dlFrom.value, +dlTo.value); });
+    document.addEventListener("click", e => {
+        if (!dlMenu.hidden && !e.target.closest(".reader__dl")) toggleDl(false);
+    });
+
     // the reader is a step in the browser history: the Back button closes it and returns to the site
     let pushed = false;
 
@@ -1970,8 +2042,8 @@ const READER = {
     chapter.addEventListener("change", () => chapter.value && goTo(+chapter.value));
     document.addEventListener("keydown", e => {
         if (root.hidden) return;
-        if (e.key === "Escape") { if (!search.hidden) return toggleSearch(false); return close(); }
-        if (e.target === pageInput || e.target === chapter || e.target === query) return;
+        if (e.key === "Escape") { if (!dlMenu.hidden) return toggleDl(false); if (!search.hidden) return toggleSearch(false); return close(); }
+        if (e.target === pageInput || e.target === chapter || e.target === query || e.target.closest(".reader__dl")) return;
         if (e.key === "ArrowRight") step(1);
         if (e.key === "ArrowLeft") step(-1);
     });
