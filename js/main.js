@@ -1919,7 +1919,10 @@ const READER = {
         if (matchMedia("(max-width: 760px)").matches) toggleSearch(false);
     });
 
-    function open(k = "master", findText = "") {
+    // the reader is a step in the browser history: the Back button closes it and returns to the site
+    let pushed = false;
+
+    function open(k = "master", findText = "", fromHistory = false) {
         if (!READER.docs[k]) k = "master";
         use(k);
         if (findText && active.index) { query.value = findText; toggleSearch(true); runSearch(); }
@@ -1927,7 +1930,8 @@ const READER = {
         root.hidden = false;
         document.documentElement.classList.add("reader-open");
         view.focus({ preventScroll: true });
-        if (location.hash !== hashOf(k)) history.replaceState(null, "", hashOf(k));
+        if (fromHistory) pushed = true;
+        else if (location.hash !== hashOf(k)) { history.pushState({ reader: k }, "", hashOf(k)); pushed = true; }
         root.dataset.mode = mode;
         if (doc) return goTo(current);
         status.textContent = `Opening ${active.title}…`;
@@ -1937,10 +1941,16 @@ const READER = {
         });
     }
 
-    function close() {
+    function close(fromHistory = false) {
+        if (root.hidden) return;
         root.hidden = true;
         document.documentElement.classList.remove("reader-open");
-        if (keyOf(location.hash)) history.replaceState(null, "", location.pathname + location.search);
+        if (!fromHistory) {
+            // opened from the site: step back in the history; opened from a shared link: just clean the address
+            if (pushed) history.back();
+            else if (keyOf(location.hash)) history.replaceState(null, "", location.pathname + location.search);
+        }
+        pushed = false;
         if (lastFocus) lastFocus.focus({ preventScroll: true });
     }
 
@@ -1950,7 +1960,7 @@ const READER = {
         e.preventDefault();
         open(link.dataset.read || "master", link.dataset.find || "");
     });
-    $$("[data-close-reader]", root).forEach(el => el.addEventListener("click", close));
+    $$("[data-close-reader]", root).forEach(el => el.addEventListener("click", () => close()));
     $$("[data-mode]", root).forEach(b => b.addEventListener("click", () => b.dataset.mode !== mode && setMode(b.dataset.mode)));
     $("#readerPrev").addEventListener("click", () => step(-1));
     $("#readerNext").addEventListener("click", () => step(1));
@@ -1998,5 +2008,9 @@ const READER = {
 
     // a shared link to windar…/#catalogue opens the catalogue straight away
     if (keyOf(location.hash)) open(keyOf(location.hash));
-    window.addEventListener("hashchange", () => { if (keyOf(location.hash) && root.hidden) open(keyOf(location.hash)); });
+    window.addEventListener("popstate", () => {
+        const k = keyOf(location.hash);
+        if (k && root.hidden) open(k, "", true);
+        else if (!k && !root.hidden) close(true);
+    });
 })();

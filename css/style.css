@@ -2791,3 +2791,25 @@ html.reader-open, html.reader-open body { overflow: hidden; }
 }
 .results__cat svg { width: 15px; height: 15px; }
 .empty__actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+
+/* reader: way back to the site */
+.reader__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    flex: none;
+    height: 40px;
+    padding: 0 16px 0 12px;
+    margin-right: 6px;
+    border-radius: 100px;
+    background: var(--white);
+    color: var(--graphite);
+    font: 600 14px var(--sans);
+    transition: background .2s, color .2s;
+}
+.reader__back:hover { background: var(--blue); color: var(--white); }
+.reader__back svg { width: 18px; height: 18px; transform: scaleX(-1); }
+@media (max-width: 760px) {
+    .reader__back { width: 40px; padding: 0; justify-content: center; margin-right: 0; }
+    .reader__back span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+}
