@@ -107,7 +107,7 @@
     <div class="header__shell">
         <a href="#top" class="logo" aria-label="Windar Aluminium – back to top">
             <span class="logo__mark" aria-hidden="true"><i></i><i></i><i></i></span>
-            <span class="logo__win">WIN</span><span class="logo__dar">DAR</span>
+            <span class="logo__win">Win</span><span class="logo__dar">DAR</span>
 <!--            <span class="logo__sub">Aluminium</span>-->
         </a>
 
@@ -786,6 +786,7 @@
             <span class="sr-only">Go to a chapter</span>
             <select id="readerChapter"></select>
         </label>
+        <button class="round reader__find" id="readerFind" aria-label="Search the catalogue" aria-expanded="false" aria-controls="readerSearch"><svg><use href="#i-search"/></svg></button>
         <div class="reader__nav">
             <button class="round reader__prev" id="readerPrev" aria-label="Previous page"><svg><use href="#i-arrow"/></svg></button>
             <label class="reader__page"><span class="sr-only">Page</span><input id="readerPage" type="number" min="1" value="1" inputmode="numeric"><span>/ <b id="readerTotal">668</b></span></label>
@@ -797,6 +798,15 @@
         </div>
         <a class="round" id="readerDownload" href="assets/media/master-technical-catalogue-2023.pdf" download aria-label="Download the PDF (58 MB)" title="Download the PDF (58 MB)"><svg><use href="#i-down"/></svg></a>
         <button class="round reader__close" data-close-reader aria-label="Close the catalogue"><svg><use href="#i-x"/></svg></button>
+    </div>
+    <div class="reader__search" id="readerSearch" hidden>
+        <form class="reader__form" id="readerSearchForm" role="search">
+            <svg><use href="#i-search"/></svg>
+            <label class="sr-only" for="readerQuery">Reference or product name</label>
+            <input type="search" id="readerQuery" placeholder="Reference or name, e.g. 3106, KARMA, hinge" autocomplete="off" spellcheck="false">
+        </form>
+        <p class="reader__hits" id="readerHits" aria-live="polite"></p>
+        <ol class="reader__results" id="readerResults"></ol>
     </div>
     <div class="reader__view" id="readerView" tabindex="-1">
         <div class="book" id="readerBook" aria-label="Catalogue pages: click or swipe to turn">

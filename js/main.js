@@ -905,13 +905,18 @@ function renderProducts() {
         `${pad(list.length)} product${list.length === 1 ? "" : "s"}` +
         (state.cat !== "all" ? ` · ${state.cat}` : "") +
         (q ? ` · “${state.query.trim()}”` : "");
+    const inCatalogue = q ? `<a class="results__cat" href="${esc(READER.docs.master.pdf)}" data-read="master" data-find="${esc(state.query.trim())}">${icon("i-book")} Search “${esc(state.query.trim())}” in the full MASTER catalogue</a>` : "";
+    $("#productResults").insertAdjacentHTML("beforeend", inCatalogue);
 
     if (!list.length) {
         $("#productMore").hidden = true;
         grid.innerHTML = `
             <div class="empty">
-                <p>No product matches your search. Our team can find the right accessory for your system.</p>
-                <a href="#contact" class="btn btn--dark">Ask our team</a>
+                <p>This reference is not on our list yet: look for it in the 668 pages of the MASTER catalogue, or ask our team.</p>
+                <div class="empty__actions">
+                    <a href="${esc(READER.docs.master.pdf)}" class="btn btn--blue" data-read="master" data-find="${esc(state.query.trim())}">${icon("i-book")} Search the catalogue</a>
+                    <a href="#contact" class="btn btn--dark">Ask our team</a>
+                </div>
             </div>`;
         return;
     }
@@ -1575,6 +1580,8 @@ const READER = {
         master: {
             kicker: "MASTER Italy", title: "Technical catalogue", size: "58 MB",
             pdf: "assets/media/master-technical-catalogue-2023.pdf",
+            // search: references, product names and words -> pages (built from the catalogue text)
+            index: "assets/media/master-catalogue-index.json",
             // chapters of the MASTER catalogue (its own index), with their PDF page
             chapters: [
         ["Introduction", 3], ["Corner", 65], ["Joint", 85], ["Latches and junctions", 91],
@@ -1604,6 +1611,7 @@ const READER = {
     const FLIP_MS = 700;
     let doc = null, loading = null, lib = null, count = 0, ratio = .707, current = 1, lastFocus = null;
     let key = null, active = null;
+    const indexes = {};
     let mode = "book", zoom = 2, sheets = [], observer = null, anchor = null;
 
     try { if (localStorage.getItem("windar-reader") === "scroll") mode = "scroll"; } catch (e) { /* private mode */ }
@@ -1695,13 +1703,13 @@ const READER = {
         [s - 1, s + 1, s + 2].forEach(x => pagesOf(x).forEach(n => { if (n > 0 && n <= count) render(n, B.pw); }));
     }
 
-    async function showSpread(s) {
+    async function showSpread(s, want) {
         B.spread = s;
         const [l, r] = pagesOf(s);
         await Promise.all([setSide("left", l), setSide("right", r)]);
         book.classList.toggle("is-cover", B.double && !l);
         book.classList.toggle("is-back", B.double && !r);
-        current = r || l;
+        current = want === l || want === r ? want : r || l;
         sync();
         preload(s);
     }
@@ -1785,7 +1793,7 @@ const READER = {
     function goTo(n) {
         n = Math.min(Math.max(1, n | 0), count || 1);
         current = n;
-        if (mode === "book") return showSpread(spreadOf(n));
+        if (mode === "book") return showSpread(spreadOf(n), n);
         if (sheets[n - 1]) view.scrollTop = sheets[n - 1].offsetTop - 16;
         sync();
     }
@@ -1826,13 +1834,95 @@ const READER = {
         dl.title = `Download the PDF (${active.size})`;
         dl.setAttribute("aria-label", dl.title);
         chapter.closest("label").hidden = !active.chapters.length;
+        $("#readerFind").hidden = !active.index;
+        toggleSearch(false);
+        $("#readerQuery").value = "";
+        $("#readerResults").innerHTML = "";
+        $("#readerHits").textContent = "";
         chapter.innerHTML = `<option value="">Chapters</option>` +
             active.chapters.map(([name, p]) => `<option value="${p}">${esc(name)} · p. ${p}</option>`).join("");
     }
 
-    function open(k = "master") {
+    /* ---------- Search in the catalogue ---------- */
+    const search = $("#readerSearch"), query = $("#readerQuery"), results = $("#readerResults"), hits = $("#readerHits");
+    const plain = t => t.normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    const loadIndex = () => indexes[key] ||= fetch(active.index).then(r => { if (!r.ok) throw r; return r.json(); })
+        .catch(e => { delete indexes[key]; throw e; });
+    const chapterOf = p => { let c = ""; active.chapters.forEach(([name, start]) => { if (start <= p) c = name; }); return c; };
+
+    function find(I, text) {
+        const found = new Map(); // page -> references matched on it
+        const add = (p, ref) => { if (!found.has(p)) found.set(p, new Set()); if (ref) found.get(p).add(ref); };
+        const code = text.toUpperCase().replace(/\s+/g, "").replace(/^ART\.?/, "");
+        if (/^\d{3}/.test(code)) {
+            // a reference: every code that starts with it (3091 finds 3091.30, 3091.31...)
+            Object.entries(I.refs).forEach(([ref, pages]) => { if (ref.startsWith(code)) pages.forEach(p => add(p, ref)); });
+        } else {
+            // words: pages that contain all of them (start of a word is enough: "hing" finds hinge, hinges)
+            const terms = plain(text).split(/[^a-z0-9-]+/).filter(t => t.length > 1);
+            if (!terms.length) return [];
+            let pages = null;
+            terms.forEach(t => {
+                const set = new Set();
+                Object.entries(I.words).forEach(([w, ps]) => { if (w.startsWith(t)) ps.forEach(p => set.add(p)); });
+                pages = pages ? new Set([...pages].filter(p => set.has(p))) : set;
+            });
+            pages.forEach(p => add(p));
+        }
+        // product pages first, the index pages at the start of the catalogue after them
+        const first = active.chapters[1] ? active.chapters[1][1] : 0;
+        return [...found].sort(([a], [b]) => ((a < first) - (b < first)) || a - b);
+    }
+
+    let searchTimer;
+    async function runSearch() {
+        const text = query.value.trim();
+        if (!text) { results.innerHTML = ""; hits.textContent = ""; return; }
+        hits.textContent = "Searching…";
+        let I;
+        try { I = await loadIndex(); } catch (e) { hits.textContent = "The search is not available right now."; return; }
+        if (query.value.trim() !== text) return;
+        const list = find(I, text);
+        const first = active.chapters[1] ? active.chapters[1][1] : 0;
+        const MAX = 40;
+        hits.textContent = list.length
+            ? `${list.length} page${list.length === 1 ? "" : "s"} for “${text}”${list.length > MAX ? ` · first ${MAX} shown` : ""}`
+            : `Nothing found for “${text}”. Try another reference or a product name, or ask our team.`;
+        results.innerHTML = list.slice(0, MAX).map(([p, refs]) => `
+            <li><button type="button" data-page="${p}">
+                <b>p. ${p}</b>
+                <span class="reader__res-text">
+                    <strong>${esc(I.labels[p] || (p < first ? "Index of references" : chapterOf(p)))}</strong>
+                    <small>${esc([I.labels[p] || p < first ? chapterOf(p) : "", refs.size ? [...refs].slice(0, 4).join(", ") + (refs.size > 4 ? "…" : "") : ""].filter(Boolean).join(" · "))}</small>
+                </span>
+            </button></li>`).join("");
+    }
+
+    function toggleSearch(show = search.hidden) {
+        search.hidden = !show;
+        $("#readerFind").setAttribute("aria-expanded", show);
+        if (show) { query.focus(); query.select(); loadIndex().catch(() => {}); }
+    }
+
+    $("#readerFind").addEventListener("click", () => toggleSearch());
+    query.addEventListener("input", () => { clearTimeout(searchTimer); searchTimer = setTimeout(runSearch, 150); });
+    $("#readerSearchForm").addEventListener("submit", e => {
+        e.preventDefault();
+        runSearch().then(() => { const b = $("button[data-page]", results); if (b) b.click(); });
+    });
+    results.addEventListener("click", e => {
+        const b = e.target.closest("[data-page]");
+        if (!b) return;
+        $$(".is-current", results).forEach(el => el.classList.remove("is-current"));
+        b.classList.add("is-current");
+        goTo(+b.dataset.page);
+        if (matchMedia("(max-width: 760px)").matches) toggleSearch(false);
+    });
+
+    function open(k = "master", findText = "") {
         if (!READER.docs[k]) k = "master";
         use(k);
+        if (findText && active.index) { query.value = findText; toggleSearch(true); runSearch(); }
         lastFocus = document.activeElement;
         root.hidden = false;
         document.documentElement.classList.add("reader-open");
@@ -1858,7 +1948,7 @@ const READER = {
         const link = e.target.closest("[data-read]");
         if (!link || e.ctrlKey || e.metaKey || e.shiftKey) return;
         e.preventDefault();
-        open(link.dataset.read || "master");
+        open(link.dataset.read || "master", link.dataset.find || "");
     });
     $$("[data-close-reader]", root).forEach(el => el.addEventListener("click", close));
     $$("[data-mode]", root).forEach(b => b.addEventListener("click", () => b.dataset.mode !== mode && setMode(b.dataset.mode)));
@@ -1870,8 +1960,8 @@ const READER = {
     chapter.addEventListener("change", () => chapter.value && goTo(+chapter.value));
     document.addEventListener("keydown", e => {
         if (root.hidden) return;
-        if (e.key === "Escape") close();
-        if (e.target === pageInput || e.target === chapter) return;
+        if (e.key === "Escape") { if (!search.hidden) return toggleSearch(false); return close(); }
+        if (e.target === pageInput || e.target === chapter || e.target === query) return;
         if (e.key === "ArrowRight") step(1);
         if (e.key === "ArrowLeft") step(-1);
     });
