@@ -53,7 +53,9 @@ All content lists are at the top of `js/main.js`:
 - `PROJECTS` — reference projects
 - `EVENTS` — exhibitions (they also appear in the banner automatically until they end)
 - `OFFICE_PHONE`, `OFFICE_EMAIL`, `REPS`, `SALES_DIRECTOR`, `SALES_REGIONS` — contacts and who covers which country / emirate
-- `CONTACT`, `WHATSAPP`, `ABOUT_VIDEO` — form recipients and form service, WhatsApp number, company video
+- `CONTACT`, `WHATSAPP`, `ABOUT_VIDEO` — form recipients and form service, WhatsApp number, company video.
+  The form is sent directly through Formspree (`CONTACT.endpoint`, form "Windar website" of the account info@windar.ae;
+  free plan with a monthly limit of submissions). Empty endpoint = the visitor's email application opens instead.
 - `READER` (further down) — documents that open in the catalogue reader
 
 If you change what the site collects or which outside services it uses (e.g. adding Formspree or visitor statistics), update `privacy.html` and its "Last updated" date.
@@ -95,6 +97,5 @@ A new Brital brochure: `python tools/build_catalogue.py "Brochure.pdf" --brochur
 - Real photos of the reference projects (and the cities for Kuwait)
 - MASTER Italy stand numbers at Big 5 Dubai and Big 5 Saudi
 - Company video (24 MB): compressed file or YouTube link
-- Form service (Formspree) registered with info@windar.ae, so requests arrive without opening the visitor's email application
 - The windar.ae domain on Vercel; then replace `windar.vercel.app` in `index.html`, `privacy.html`, `robots.txt` and `sitemap.xml`
 - Internal review of `privacy.html` (retention period, Saudi data protection law if needed)

@@ -176,7 +176,7 @@ const CONTACT = {
         email: OFFICE_EMAIL,
         topics: ["Choosing the right product", "Compatibility with an aluminium system", "Installation & adjustment", "Technical drawings & data", "After-sales support", "Other"]
     },
-    endpoint: ""
+    endpoint: "https://formspree.io/f/mnpnzlgl" // Formspree form "Windar website" (account info@windar.ae)
 };
 
 // WhatsApp: international format, digits only, no "+" or spaces (e.g. "971501234567").
