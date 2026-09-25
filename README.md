@@ -79,7 +79,9 @@ A shared link `…/#catalogue` (or `#catalogue-tb25`, `#catalogue-tb50`) opens i
 | `master-catalogue-index.json` (300 KB, 79 KB compressed) | Search: 2,167 references and 6,251 words → pages. |
 | `brital-tb25-slim-sliding.pdf`, `brital-tb50-minimal-folding.pdf` | Brital brochures. |
 
-Page numbers in the reader and the search are the page numbers of the PDF file (page 248 of the file is printed "184").
+The reader, the chapters, the search results and "These pages" use the numbers printed on the catalogue pages
+(`label` / `pageOf` in `READER.docs.master`): Cover, A.1–A.62 for the introduction, then 1–604. Hovering the page field
+shows the position in the file (printed 184 = page 248 of the file). Visitors can type 184 or A.5 to jump there.
 
 ### New MASTER catalogue
 

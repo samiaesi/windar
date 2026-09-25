@@ -1594,6 +1594,17 @@ const READER = {
             // the lighter copy above (pdf) is only used to read it on the site
             download: "https://www.masteritaly.com/wp-content/uploads/2023/05/CATALOGUE_WEB_2023_18_05.pdf",
             full: "115 MB · full quality · from masteritaly.com",
+            // numbers printed on the pages: cover, introduction A.1–A.62 (file pages 3–64),
+            // then the technical catalogue 1–604 (file pages 65–668)
+            label: n => n < 3 ? "Cover" : n < 65 ? "A." + (n - 2) : String(n - 64),
+            pageOf: text => {
+                const t = text.trim().toUpperCase().replace(/^P(AGE)?\.?\s*/, "");
+                if (t === "COVER") return 1;
+                let m = t.match(/^A\.?\s*(\d+)$/);
+                if (m) return +m[1] >= 1 && +m[1] <= 62 ? +m[1] + 2 : null;
+                m = t.match(/^\d+$/);
+                return m && +t >= 1 && +t <= 604 ? +t + 64 : null;
+            },
             // chapters of the MASTER catalogue (its own index), with their PDF page
             chapters: [
         ["Introduction", 3], ["Corner", 65], ["Joint", 85], ["Latches and junctions", 91],
@@ -1623,6 +1634,13 @@ const READER = {
     const FLIP_MS = 700;
     let doc = null, loading = null, lib = null, count = 0, ratio = .707, current = 1, lastFocus = null;
     let key = null, active = null;
+    // page number shown to the visitor (the printed one when the document has it) and the way back
+    const lab = n => active && active.label ? active.label(n) : String(n);
+    const fromLabel = text => {
+        if (active && active.pageOf) return active.pageOf(String(text));
+        const n = parseInt(text, 10);
+        return n >= 1 && n <= count ? n : null;
+    };
     const indexes = {};
     let mode = "book", zoom = 2, sheets = [], observer = null, anchor = null;
 
@@ -1646,7 +1664,8 @@ const READER = {
         const first = (await d.getPage(1)).getViewport({ scale: 1 });
         ratio = first.width / first.height;
         total.textContent = count;
-        pageInput.max = count;
+        // printed numbers do not end at the file's last page: the total is not shown then
+        total.parentElement.hidden = !!active.label;
         root.style.setProperty("--ratio", ratio);
     });
 
@@ -1679,7 +1698,8 @@ const READER = {
     };
 
     function sync() {
-        pageInput.value = current;
+        pageInput.value = lab(current);
+        pageInput.title = active.label ? `Page ${current} of ${count} in the file` : "";
         let ch = "";
         active.chapters.forEach(([, p]) => { if (p <= current) ch = p; });
         chapter.value = ch;
@@ -1857,7 +1877,7 @@ const READER = {
         $("#readerResults").innerHTML = "";
         $("#readerHits").textContent = "";
         chapter.innerHTML = `<option value="">Chapters</option>` +
-            active.chapters.map(([name, p]) => `<option value="${p}">${esc(name)} · p. ${p}</option>`).join("");
+            active.chapters.map(([name, p]) => `<option value="${p}">${esc(name)} · p. ${esc(lab(p))}</option>`).join("");
     }
 
     /* ---------- Search in the catalogue ---------- */
@@ -1907,7 +1927,7 @@ const READER = {
             : `Nothing found for “${text}”. Try another reference or a product name, or ask our team.`;
         results.innerHTML = list.slice(0, MAX).map(([p, refs]) => `
             <li><button type="button" data-page="${p}">
-                <b>p. ${p}</b>
+                <b>p. ${esc(lab(p))}</b>
                 <span class="reader__res-text">
                     <strong>${esc(I.labels[p] || (p < first ? "Index of references" : chapterOf(p)))}</strong>
                     <small>${esc([I.labels[p] || p < first ? chapterOf(p) : "", refs.size ? [...refs].slice(0, 4).join(", ") + (refs.size > 4 ? "…" : "") : ""].filter(Boolean).join(" · "))}</small>
@@ -1948,8 +1968,8 @@ const READER = {
         let [a, b] = mode === "book" && B.double ? pagesOf(B.spread) : [current, current];
         a ||= b; b ||= a;
         dlFrom.max = dlTo.max = count;
-        dlFrom.value = a;
-        dlTo.value = b;
+        dlFrom.value = lab(a);
+        dlTo.value = lab(b);
         dlNote.textContent = "";
         dlNote.classList.remove("is-error");
     }
@@ -1963,15 +1983,15 @@ const READER = {
         setTimeout(() => URL.revokeObjectURL(url), 4000);
     };
 
-    async function downloadPages(a, b) {
-        a = Math.min(Math.max(1, a | 0), count);
-        b = Math.min(Math.max(1, b | 0), count);
-        if (a > b) [a, b] = [b, a];
+    async function downloadPages(from, to) {
         const note = (text, error) => { dlNote.textContent = text; dlNote.classList.toggle("is-error", !!error); };
+        let a = fromLabel(from), b = fromLabel(to);
+        if (!a || !b) return note(`Page “${!a ? from : to}” is not in this document.`, true);
+        if (a > b) [a, b] = [b, a];
         if (b - a + 1 > READER.maxPages)
             return note(`Up to ${READER.maxPages} pages at a time. For more, download the whole catalogue.`, true);
-        const name = `MASTER-technical-catalogue-p${a}${b > a ? "-" + b : ""}.pdf`;
-        note(`Preparing ${b > a ? `pages ${a}–${b}` : `page ${a}`}…`);
+        const name = `MASTER-technical-catalogue-p${lab(a)}${b > a ? "-" + lab(b) : ""}.pdf`.replace(/\s/g, "");
+        note(`Preparing ${b > a ? `pages ${lab(a)}–${lab(b)}` : `page ${lab(a)}`}…`);
         try {
             const nums = Array.from({ length: b - a + 1 }, (_, i) => a + i);
             const files = await Promise.all(nums.map(n => fetch(active.page(n)).then(r => { if (!r.ok) throw r; return r.arrayBuffer(); })));
@@ -1998,7 +2018,7 @@ const READER = {
         if (!active.page) return $("#readerDownload").click();
         toggleDl();
     });
-    $("#readerDlForm").addEventListener("submit", e => { e.preventDefault(); downloadPages(+dlFrom.value, +dlTo.value); });
+    $("#readerDlForm").addEventListener("submit", e => { e.preventDefault(); downloadPages(dlFrom.value, dlTo.value); });
     document.addEventListener("click", e => {
         if (!dlMenu.hidden && !e.target.closest(".reader__dl")) toggleDl(false);
     });
@@ -2050,7 +2070,10 @@ const READER = {
     $("#readerNext").addEventListener("click", () => step(1));
     $("#readerIn").addEventListener("click", () => setZoom(zoom + 1));
     $("#readerOut").addEventListener("click", () => setZoom(zoom - 1));
-    pageInput.addEventListener("change", () => goTo(+pageInput.value));
+    pageInput.addEventListener("change", () => {
+        const n = fromLabel(pageInput.value);
+        if (n) goTo(n); else sync(); // unknown number: show the current page again
+    });
     chapter.addEventListener("change", () => chapter.value && goTo(+chapter.value));
     document.addEventListener("keydown", e => {
         if (root.hidden) return;

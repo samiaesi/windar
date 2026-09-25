@@ -790,7 +790,7 @@
         <button class="round reader__find" id="readerFind" aria-label="Search the catalogue" aria-expanded="false" aria-controls="readerSearch"><svg><use href="#i-search"/></svg></button>
         <div class="reader__nav">
             <button class="round reader__prev" id="readerPrev" aria-label="Previous page"><svg><use href="#i-arrow"/></svg></button>
-            <label class="reader__page"><span class="sr-only">Page</span><input id="readerPage" type="number" min="1" value="1" inputmode="numeric"><span>/ <b id="readerTotal">668</b></span></label>
+            <label class="reader__page"><span class="sr-only">Page</span><input id="readerPage" type="text" value="1" autocomplete="off" spellcheck="false" enterkeyhint="go"><span>/ <b id="readerTotal">668</b></span></label>
             <button class="round" id="readerNext" aria-label="Next page"><svg><use href="#i-arrow"/></svg></button>
         </div>
         <div class="reader__zoom">
@@ -803,8 +803,8 @@
                 <form class="dl-pages" id="readerDlForm">
                     <p class="dl-pages__title"><strong>These pages</strong><small>Full quality PDF, sharp when printed or zoomed</small></p>
                     <div class="dl-pages__range">
-                        <label>From <input type="number" id="dlFrom" min="1" inputmode="numeric"></label>
-                        <label>to <input type="number" id="dlTo" min="1" inputmode="numeric"></label>
+                        <label>From <input type="text" id="dlFrom" autocomplete="off" spellcheck="false"></label>
+                        <label>to <input type="text" id="dlTo" autocomplete="off" spellcheck="false"></label>
                         <button type="submit" class="btn btn--blue">Download</button>
                     </div>
                     <p class="dl-pages__note" id="readerDlNote" role="status"></p>
