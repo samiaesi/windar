@@ -2923,3 +2923,24 @@ html.reader-open, html.reader-open body { overflow: hidden; }
 /* both brand cards the same height, buttons aligned at the bottom */
 .brand__items { flex: 1; }
 .brand__actions { margin-top: auto; padding-top: 22px; }
+
+/* Contact form: compact, fits in one screen */
+.form { padding: 28px 30px; }
+.form__row { gap: 12px; }
+.field { margin-bottom: 12px; }
+.field > span, .form__label { margin-bottom: 4px; font-size: 12.5px; }
+.field input, .field select { height: 42px; font-size: 14.5px; }
+.field textarea { padding: 10px 14px; font-size: 14.5px; }
+.rtype { margin-bottom: 14px; gap: 10px; }
+.rtype legend { margin-bottom: 6px; }
+.rtype__card { grid-template-columns: auto 1fr; column-gap: 10px; row-gap: 1px; align-items: center; padding: 10px 14px; }
+.rtype__card svg { grid-row: span 2; margin: 0; font-size: 20px; }
+.rtype__card small { font-size: 12px; line-height: 1.35; }
+.form__note { margin: 0 0 8px; }
+.form__msg { margin-bottom: 8px; }
+.form__msg:empty { min-height: 0; margin: 0; }
+@media (max-width: 640px) {
+    .form { padding: 22px 18px; }
+    .form__row { grid-template-columns: 1fr; gap: 0; }
+    .rtype__card small { display: none; }
+}

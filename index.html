@@ -746,7 +746,22 @@
                 </label>
             </fieldset>
 
-            <label class="field"><span>Subject</span><select name="topic" id="formTopic"></select></label>
+            <div class="form__row">
+                <label class="field"><span>Subject</span><select name="topic" id="formTopic"></select></label>
+                <label class="field">
+                    <span>Country</span>
+                    <select name="country">
+                        <option>United Arab Emirates</option>
+                        <option>Saudi Arabia</option>
+                        <option>Kuwait</option>
+                        <option>Qatar</option>
+                        <option>Oman</option>
+                        <option>Bahrain</option>
+                        <option>Jordan</option>
+                        <option>Other</option>
+                    </select>
+                </label>
+            </div>
 
             <div class="form__row only-technical">
                 <label class="field"><span>Aluminium system / profile</span><input type="text" name="system" placeholder="Brand and series of your profile"></label>
@@ -768,21 +783,8 @@
                 <label class="field"><span>Phone</span><input type="tel" name="phone" autocomplete="tel"></label>
             </div>
             <label class="field">
-                <span>Country</span>
-                <select name="country">
-                    <option>United Arab Emirates</option>
-                    <option>Saudi Arabia</option>
-                    <option>Kuwait</option>
-                    <option>Qatar</option>
-                    <option>Oman</option>
-                    <option>Bahrain</option>
-                    <option>Jordan</option>
-                    <option>Other</option>
-                </select>
-            </label>
-            <label class="field">
                 <span id="formMessageLabel">Project details *</span>
-                <textarea name="message" rows="4" required placeholder="System, quantities, delivery date…"></textarea>
+                <textarea name="message" rows="3" required placeholder="System, quantities, delivery date…"></textarea>
             </label>
             <p class="form__note">We use your details only to answer your request. See our <a href="privacy.html">privacy policy</a>.</p>
             <p class="form__msg" id="formMsg" role="status" aria-live="polite"></p>
