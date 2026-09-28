@@ -787,10 +787,12 @@ megaItem.addEventListener("focusout", e => { if (!megaItem.contains(e.relatedTar
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let current = -1;
     let timer;
-    let paused = reduce || slides.length < 2;
+    // "reduce motion" setting: the slides still change, more slowly and without movement
+    const delay = reduce ? Math.max(BANNER_DELAY, 12000) : BANNER_DELAY;
+    let paused = slides.length < 2;
     let hover = false;
 
-    root.style.setProperty("--dur", BANNER_DELAY + "ms");
+    root.style.setProperty("--dur", delay + "ms");
     if (slides.length < 2) $(".banner__controls", root).hidden = true;
 
     // pictures of the next slides are loaded after the page, so the first one shows up faster
@@ -830,7 +832,7 @@ megaItem.addEventListener("focusout", e => { if (!megaItem.contains(e.relatedTar
 
     function schedule() {
         clearTimeout(timer);
-        if (!paused && !hover && !document.hidden) timer = setTimeout(() => go(current + 1), BANNER_DELAY);
+        if (!paused && !hover && !document.hidden) timer = setTimeout(() => go(current + 1), delay);
     }
     function setPaused(p) {
         paused = p;
@@ -847,9 +849,17 @@ megaItem.addEventListener("focusout", e => { if (!megaItem.contains(e.relatedTar
     $("#bannerNext").addEventListener("click", () => go(current + 1));
     $("#bannerPause").addEventListener("click", () => setPaused(!paused));
 
-    // Pause while the visitor reads (hover / keyboard focus); the rail keeps its place.
-    root.addEventListener("mouseenter", () => { hover = true; root.classList.add("is-paused"); clearTimeout(timer); });
-    root.addEventListener("mouseleave", () => {
+    // Pause only while the pointer is on a button, a link or the slide rail (the visitor is about to click);
+    // the banner fills the screen, so pausing on the whole banner would stop it most of the time.
+    const holdOn = e => !!e.target.closest("a, button, .banner__ui");
+    root.addEventListener("pointerover", e => {
+        if (e.pointerType !== "mouse" || !holdOn(e) || hover) return;
+        hover = true;
+        root.classList.add("is-paused");
+        clearTimeout(timer);
+    });
+    root.addEventListener("pointerout", e => {
+        if (!hover || (e.relatedTarget && root.contains(e.relatedTarget) && e.relatedTarget.closest("a, button, .banner__ui"))) return;
         hover = false;
         root.classList.toggle("is-paused", paused);
         const bar = $(".rail-tab.is-active .rail-tab__bar", root);
