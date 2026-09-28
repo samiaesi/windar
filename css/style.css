@@ -3064,3 +3064,14 @@ html.reader-open, html.reader-open body { overflow: hidden; }
     .q2-figures dd { font-size: 32px; }
 }
 .q2-grades dd { white-space: nowrap; font-size: 17px; }
+
+/* Official Windar logo (vector, assets/img/windar-logo.svg): colours follow the header tone */
+.logo__svg { display: block; height: 46px; width: calc(46px * 1216 / 360); overflow: visible; }
+.logo { --logo-win: #0505fd; --logo-dar: var(--graphite); }
+.header .logo { --logo-win: var(--h-brand); --logo-dar: var(--h-text); }
+.header .logo__svg use { transition: fill .3s, stroke .3s; }
+.logo--light, .footer .logo { --logo-win: #7c86ff; --logo-dar: var(--white); }
+.footer .logo__svg { height: 56px; width: calc(56px * 1216 / 360); }
+@media (max-width: 640px) {
+    .logo__svg { height: 38px; width: calc(38px * 1216 / 360); }
+}
