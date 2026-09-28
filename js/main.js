@@ -64,7 +64,7 @@ const MASTER_CATALOGUE = "https://www.masteritaly.com/catalogo/en/";
 /* PRODUCTS — a selection from the MASTER Italy catalogue (codes, names and descriptions as published).
    img  : file name of the MASTER catalogue picture (or a full URL / local path)
    page : end of the product page address in the MASTER catalogue
-   bestseller: true → shown first with a "Best seller" badge (to set with your real best sellers in the Gulf). */
+   bestseller: true → shown first with a "Best seller" badge (to set with your real best sellers in the region). */
 const PRODUCTS = [
     { category: "Window Line", ref: "3451LG.1", name: "WEEN tilt & turn sash, 140 kg", desc: "Extruded aluminium hinges, 140 kg capacity", img: "3420F_1.jpg", page: "590-ween-tilt-and-turn-sash-ween-erre-140-kg" },
     { category: "Window Line", ref: "3421.32", name: "WEEN additional locking points", desc: "Zamak, stainless steel screws", img: "2058-ween-punti-di-chiusura-supplementare-ween-erre-40-570-3421_32.jpg", page: "570-ween-additional-locking-points-ween-erre-40" },
@@ -133,10 +133,10 @@ const REPS = [
 ];
 
 // Sales management (shown under the sales team)
-const SALES_DIRECTOR = { name: "Alfredo Saponara", title: "Sales Director", area: "Gulf region", phone: OFFICE_PHONE, email: OFFICE_EMAIL, photo: "" };
+const SALES_DIRECTOR = { name: "Alfredo Saponara", title: "Sales Director", area: "Middle East", phone: OFFICE_PHONE, email: OFFICE_EMAIL, photo: "" };
 
-// Gulf head office: Dubai and the countries without a dedicated representative.
-const HEAD_OFFICE = { id: "office", name: "Windar sales team", title: "Gulf head office", area: "Dubai & other GCC countries", region: "Dubai & GCC", country: "UAE · GCC", phone: OFFICE_PHONE, email: OFFICE_EMAIL, photo: "", whatsapp: false };
+// Middle East head office: Dubai and the countries without a dedicated representative.
+const HEAD_OFFICE = { id: "office", name: "Windar sales team", title: "Middle East head office", area: "Dubai & other countries", region: "Dubai & Middle East", country: "UAE · Middle East", phone: OFFICE_PHONE, email: OFFICE_EMAIL, photo: "", whatsapp: false };
 
 // "Talk to sales" finder: which representative answers which country / emirate.
 // country must match an option of the contact form's Country list.
@@ -156,6 +156,7 @@ const SALES_REGIONS = [
     { code: "QA", country: "Qatar", rep: "office" },
     { code: "OM", country: "Oman", rep: "office" },
     { code: "BH", country: "Bahrain", rep: "office" },
+    { code: "JO", country: "Jordan", rep: "office" },
     { code: "··", country: "Other", label: "Other country", rep: "office" }
 ];
 
@@ -199,7 +200,7 @@ const ABOUT_VIDEO = {
     type: "file",
     src: "assets/media/windar.mp4",
     poster: "assets/img/hero-3-900.webp",
-    title: "Windar Aluminium in the Gulf",
+    title: "Windar Aluminium in the Middle East",
     duration: ""
 };
 
@@ -221,7 +222,7 @@ const BANNERS = [
         type: "Corporate", layout: "photo", image: "assets/img/hero-1.webp",
         short: "Precision hardware",
         title: "Precision hardware <em>for aluminium</em> windows&nbsp;&amp;&nbsp;doors.",
-        text: "MASTER Italy accessories, supplied across the Gulf since 2007.",
+        text: "MASTER Italy accessories, supplied across the Middle East since 2007.",
         buttons: [
             { label: "Explore products", href: "#systems", style: "blue" },
             { label: "Technical support", href: "#contact", style: "line", request: "technical" }
@@ -231,7 +232,7 @@ const BANNERS = [
         type: "Product", layout: "split", image: "assets/img/news-ween-hide.webp",
         short: "WEEN HIDE 180",
         title: "WEEN HIDE 180, <em>the invisible</em> hinge.",
-        text: "The latest MASTER concealed solution, now available in the Gulf.",
+        text: "The latest MASTER concealed solution, now available in the Middle East.",
         buttons: [
             { label: "Discover", href: "https://www.masteritaly.com", style: "blue", external: true },
             { label: "Ask for a quote", href: "#contact", style: "line", request: "business", topic: "Quotation for a project" }
@@ -301,7 +302,7 @@ const PROJECTS = [
         details: { "System": "Façade & LV-2-50 louvre", "Consultant": "Al Farouqi Consultants", "Contractor": "Premier Metal Systems" }
     }
 ];
-const COUNTRY_NAMES = { UAE: "United Arab Emirates", KSA: "Saudi Arabia", Kuwait: "Kuwait", Qatar: "Qatar", Oman: "Oman", Bahrain: "Bahrain" };
+const COUNTRY_NAMES = { UAE: "United Arab Emirates", KSA: "Saudi Arabia", Kuwait: "Kuwait", Qatar: "Qatar", Oman: "Oman", Bahrain: "Bahrain", Jordan: "Jordan" };
 
 /* EVENTS & EXHIBITIONS
    start / end : "YYYY-MM-DD". After the end date the event moves to "Past events" by itself
@@ -425,7 +426,7 @@ function avatar(person, cls = "") {
 }
 
 /* ---------- Talk to sales: find the representative by country ---------- */
-const TIMEZONE_COUNTRY = { "Asia/Dubai": "AE", "Asia/Riyadh": "SA", "Asia/Kuwait": "KW", "Asia/Qatar": "QA", "Asia/Muscat": "OM", "Asia/Bahrain": "BH" };
+const TIMEZONE_COUNTRY = { "Asia/Dubai": "AE", "Asia/Riyadh": "SA", "Asia/Kuwait": "KW", "Asia/Qatar": "QA", "Asia/Muscat": "OM", "Asia/Bahrain": "BH", "Asia/Amman": "JO" };
 const repById = id => REPS.find(r => r.id === id) || HEAD_OFFICE;
 const regionByCode = code => SALES_REGIONS.find(r => r.code === code);
 const waLink = (phone, text) => `https://wa.me/${phone.replace(/\D/g, "")}?text=${encodeURIComponent(text)}`;
@@ -460,7 +461,7 @@ function refreshSalesCtas() {
         if (saved) {
             const { region, area, rep } = resolveRep(saved);
             small.textContent = `Your contact · ${area ? area.name : region.label || region.country}`;
-            strong.textContent = rep.id === "office" ? "Windar Gulf sales team" : rep.name;
+            strong.textContent = rep.id === "office" ? "Windar sales team" : rep.name;
         } else {
             small.textContent = "Sales team";
             strong.textContent = "Talk to sales";
@@ -1396,7 +1397,7 @@ const counter = new IntersectionObserver(entries => {
         counter.unobserve(el);
     });
 }, { threshold: .5 });
-// "Years in the Gulf" is counted from the founding year, so it stays right every year
+// "Years in the Middle East" is counted from the founding year, so it stays right every year
 $$("[data-since]").forEach(el => { el.dataset.count = new Date().getFullYear() - +el.dataset.since; });
 $$("[data-count]").forEach(el => counter.observe(el));
 
