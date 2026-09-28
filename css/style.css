@@ -2860,3 +2860,11 @@ html.reader-open, html.reader-open body { overflow: hidden; }
 @media (max-width: 760px) {
     .reader__dlmenu { position: fixed; top: 118px; left: 12px; right: 12px; width: auto; }
 }
+
+/* About facts: "Middle East" is longer than a year, keep the row tidy on phones */
+.about__facts strong { line-height: 1.1; margin-bottom: 4px; }
+.about__facts span { display: block; line-height: 1.4; }
+@media (max-width: 640px) {
+    .about__facts strong { font-size: 22px; }
+    .about__facts li { padding-right: 10px; }
+}
