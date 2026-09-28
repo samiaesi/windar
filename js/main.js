@@ -255,6 +255,43 @@ const BANNER_DELAY = 7000; // ms per slide
    details : any lines you want to show (system, consultant, contractors…)
    The first project is the one shown first. */
 const PROJECTS = [
+    // From "MASTER - Windar Brochure 2025", project references (photos: D:\Windar projects)
+    {
+        name: "Blue Waters Island", city: "Dubai", country: "UAE", type: "Island development", image: "assets/img/projects/blue-waters-island.webp",
+        details: { "Aluminium partner": "Alico" }
+    },
+    {
+        name: "The Grand – Dubai Creek Harbour", city: "Dubai", country: "UAE", type: "Residential tower", image: "assets/img/projects/the-grand-dubai-creek-harbour.webp",
+        details: { "Aluminium partner": "Al Barary Glass and Aluminium" }
+    },
+    {
+        name: "Palm Tower", city: "Dubai", country: "UAE", type: "Tower", image: "assets/img/projects/palm-tower.webp",
+        details: { "Aluminium partner": "Reem Emirates" }
+    },
+    {
+        name: "Al Wasl Hotel Parcel E & F", city: "Dubai", country: "UAE", type: "Hotel", image: "assets/img/projects/al-wasl-hotel-parcel-e-f.webp",
+        details: { "Aluminium partner": "JML" }
+    },
+    {
+        name: "Reflection Shams Tower", city: "Abu Dhabi", country: "UAE", type: "Residential tower", image: "assets/img/projects/reflection-shams-tower.webp",
+        details: { "Aluminium partner": "Fibrex" }
+    },
+    {
+        name: "Fujairah Business Center", city: "Fujairah", country: "UAE", type: "Business center", image: "assets/img/projects/fujairah-business-center.webp",
+        details: { "Aluminium partner": "JJBC" }
+    },
+    {
+        name: "Salwa Beach Resort", city: "Doha", country: "Qatar", type: "Resort", image: "assets/img/projects/salwa-beach-resort.webp",
+        details: { "Aluminium partner": "Profession Aluminum" }
+    },
+    {
+        name: "Ministry of Finance Complex Building", city: "Amman", country: "Jordan", type: "Government building", image: "assets/img/projects/ministry-of-finance-complex-building.webp",
+        details: { "Aluminium partner": "Arab Business Contracting / EIP" }
+    },
+    {
+        name: "Sabah Al Ahmad City", city: "", country: "Kuwait", type: "City development", image: "assets/img/projects/sabah-al-ahmad-city.webp",
+        details: { "Aluminium partner": "Alico" }
+    },
     {
         name: "HSBC Middle East HQ", city: "Dubai", country: "UAE", type: "Headquarters", image: "",
         details: { "Consultant": "Conin", "Façade contractor": "Zebian Industries LLC", "Main contractor": "Brookfield Multiplex Middle East" }
