@@ -291,30 +291,6 @@ const PROJECTS = [
     {
         name: "Sabah Al Ahmad City", city: "", country: "Kuwait", type: "City development", image: "assets/img/projects/sabah-al-ahmad-city.webp",
         details: { "Aluminium partner": "Alico" }
-    },
-    {
-        name: "HSBC Middle East HQ", city: "Dubai", country: "UAE", type: "Headquarters", image: "",
-        details: { "Consultant": "Conin", "Façade contractor": "Zebian Industries LLC", "Main contractor": "Brookfield Multiplex Middle East" }
-    },
-    {
-        name: "Innovation Hub", city: "Dubai", country: "UAE", type: "Office complex", image: "",
-        details: { "Consultant": "RMJM, Dubai", "Façade contractor": "Zebian Aluminium & Glass Industries LLC", "Main contractor": "Al Sahel Contracting Co LLC" }
-    },
-    {
-        name: "Abha Airport", city: "Abha", country: "KSA", type: "Airport", image: "",
-        details: { "Consultant": "GACA", "Aluminium contractor": "Al Maghrabi Factory for Metal Products" }
-    },
-    {
-        name: "Kasem Mall", city: "Makkah", country: "KSA", type: "Mall", image: "",
-        details: { "Consultant": "AMA Engineering", "Aluminium contractor": "Al Qureshi Aluminium" }
-    },
-    {
-        name: "Al Fadhili Tower", city: "", country: "Kuwait", type: "Tower", image: "",
-        details: { "System": "Façade & LV-2-50 louvre", "Consultant": "Al Farouqi Consultants", "Contractor": "Premier Metal Systems" }
-    },
-    {
-        name: "The Tower", city: "", country: "Kuwait", type: "Tower", image: "",
-        details: { "System": "Façade & LV-2-50 louvre", "Consultant": "Al Farouqi Consultants", "Contractor": "Premier Metal Systems" }
     }
 ];
 const COUNTRY_NAMES = { UAE: "United Arab Emirates", KSA: "Saudi Arabia", Kuwait: "Kuwait", Qatar: "Qatar", Oman: "Oman", Bahrain: "Bahrain", Jordan: "Jordan" };
