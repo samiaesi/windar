@@ -1570,6 +1570,17 @@ const READER = {
             kicker: "Brital systems", title: "TB-25 Slim Sliding", size: "10 MB",
             pdf: "assets/media/brital-tb25-slim-sliding.pdf", chapters: []
         },
+        welka: {
+            kicker: "WELKA · catalogue", title: "Keys and cylinders", size: "0.5 MB",
+            pdf: "assets/media/welka-keys-cylinders.pdf", chapters: [],
+            // numbers printed on the pages of the WELKA catalogue (this chapter is pages 116-130)
+            label: n => n === 1 ? "Cover" : String(n + 114),
+            pageOf: text => {
+                const t = text.trim().toUpperCase().replace(/^P(AGE)?\.?\s*/, "");
+                if (t === "COVER") return 1;
+                return /^\d+$/.test(t) && +t >= 116 && +t <= 130 ? +t - 114 : null;
+            }
+        },
         locks: {
             kicker: "Windar brochure 2025", title: "WELKA & Antipanic", size: "0.8 MB",
             pdf: "assets/media/windar-locks-panic-devices.pdf",
