@@ -2897,7 +2897,7 @@ html.reader-open, html.reader-open body { overflow: hidden; }
 .brand { display: flex; flex-direction: column; padding: 28px; border-radius: var(--r-lg); background: var(--white); border: 1px solid var(--line); }
 .brand__head { display: flex; align-items: center; gap: 16px; padding-bottom: 20px; margin-bottom: 8px; border-bottom: 1px solid var(--line); }
 .brand__logo { width: 64px; height: auto; flex: none; }
-.brand__logo--tall { width: 52px; }
+.brand__logo--square { width: 58px; }
 .brand__head h3 { margin: 0; font-size: 26px; letter-spacing: -.02em; }
 .brand__head p { margin: 2px 0 0; font-size: 14px; color: var(--muted); }
 .brand__items { margin: 0; padding: 0; list-style: none; }
