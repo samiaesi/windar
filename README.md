@@ -59,6 +59,8 @@ All content lists are at the top of `js/main.js`:
   free plan with a monthly limit of submissions). Empty endpoint = the visitor's email application opens instead.
 - `READER` (further down) — documents that open in the catalogue reader
 
+Visitor statistics: Vercel Web Analytics (enabled in the Vercel project, tab Analytics; script `/_vercel/insights/script.js` at the end of `index.html` and `privacy.html`, no cookies).
+
 If you change what the site collects or which outside services it uses (e.g. adding Formspree or visitor statistics), update `privacy.html` and its "Last updated" date.
 
 ## Catalogue reader
