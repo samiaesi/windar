@@ -1052,7 +1052,7 @@ $("#heroSearch").addEventListener("submit", e => {
 
 $("#footerSystems").innerHTML = Object.keys(SYSTEMS).map(name =>
     `<li><a href="#products" data-cat="${esc(name)}">${esc(name)}</a></li>`
-).join("") + `<li><a href="#brital">Brital aluminium systems</a></li><li><a href="#locks">Locks &amp; panic exit devices</a></li>`;
+).join("") + `<li><a href="#locks">Locks &amp; panic exit devices</a></li><li><a href="#brital">Brital aluminium systems</a></li>`;
 $("#footerSystems").addEventListener("click", e => {
     const a = e.target.closest("a");
     if (a) { e.preventDefault(); showCategory(a.dataset.cat); }

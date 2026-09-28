@@ -37,8 +37,8 @@ then http://localhost:8000. The catalogue reader needs a server (it does not wor
 | 01 | About | Short description, company video, key figures, MASTER Italy link. |
 | 02 | Product categories | The 7 MASTER lines, product search, MASTER configurator, the complete catalogue card. |
 | 03 | Product range | 39 references from the MASTER catalogue, quote list. A search also offers "Search in the full MASTER catalogue". |
-| 04 | Aluminium systems by Brital | TB-25 Slim Sliding and TB-50 Minimal Folding: drawn pictograms, 3D views, specs from the Brital brochures, quotation, brochure in the reader. |
-| 05 | Locks & panic exit devices | Other Italian brands sold by Windar: WELKA locks, cylinders and Multi5 locking points; Antipanic panic exit devices. Content and pictures from the "MASTER - Windar Brochure 2025" (pages 25-27, also in the reader: `data-read="locks"`). |
+| 04 | Locks & panic exit devices | Other Italian brands sold by Windar: WELKA locks, cylinders and Multi5 locking points; Antipanic panic exit devices. Content and pictures from the "MASTER - Windar Brochure 2025" (pages 25-27, also in the reader: `data-read="locks"`). |
+| 05 | Aluminium systems by Brital | TB-25 Slim Sliding and TB-50 Minimal Folding: drawn pictograms, 3D views, specs from the Brital brochures, quotation, brochure in the reader. |
 | 06 | Certified quality | MASTER Italy certifications (real documents only). |
 | 07 | Reference projects | Projects by country with details. |
 | 08 | News & events | Big 5 Dubai / Big 5 Saudi with countdown, add-to-calendar, meeting booking; product news. |
