@@ -38,11 +38,12 @@ then http://localhost:8000. The catalogue reader needs a server (it does not wor
 | 02 | Product categories | The 7 MASTER lines, product search, MASTER configurator, the complete catalogue card. |
 | 03 | Product range | 39 references from the MASTER catalogue, quote list. A search also offers "Search in the full MASTER catalogue". |
 | 04 | Aluminium systems by Brital | TB-25 Slim Sliding and TB-50 Minimal Folding: drawn pictograms, 3D views, specs from the Brital brochures, quotation, brochure in the reader. |
-| 05 | Certified quality | MASTER Italy certifications (real documents only). |
-| 06 | Reference projects | Projects by country with details. |
-| 07 | News & events | Big 5 Dubai / Big 5 Saudi with countdown, add-to-calendar, meeting booking; product news. |
-| 08 | Sales team | One general Windar sales team (no personal names), contact buttons and the countries served. |
-| 09 | Contact | Business / technical request form, then the footer. |
+| 05 | Locks & panic exit devices | Other Italian brands sold by Windar: WELKA locks, cylinders and Multi5 locking points; Antipanic panic exit devices. Content and pictures from the "MASTER - Windar Brochure 2025" (pages 25-27, also in the reader: `data-read="locks"`). |
+| 06 | Certified quality | MASTER Italy certifications (real documents only). |
+| 07 | Reference projects | Projects by country with details. |
+| 08 | News & events | Big 5 Dubai / Big 5 Saudi with countdown, add-to-calendar, meeting booking; product news. |
+| 09 | Sales team | One general Windar sales team (no personal names), contact buttons and the countries served. |
+| 10 | Contact | Business / technical request form, then the footer. |
 
 ## Where to edit content
 
@@ -63,7 +64,7 @@ If you change what the site collects or which outside services it uses (e.g. add
 ## Catalogue reader
 
 Any link with `data-read="<key>"` opens a document of `READER.docs` inside the site:
-`master` (MASTER technical catalogue), `tb25` and `tb50` (Brital brochures).
+`master` (MASTER technical catalogue), `tb25` and `tb50` (Brital brochures), `locks` (WELKA & Antipanic product sheet). `data-page="2"` opens a document at a given page.
 A shared link `…/#catalogue` (or `#catalogue-tb25`, `#catalogue-tb50`) opens it directly.
 
 - **Book** view (pages that turn, double pages on a computer, one page on a phone) or **Scroll** view (with zoom). The choice is remembered.

@@ -1052,7 +1052,7 @@ $("#heroSearch").addEventListener("submit", e => {
 
 $("#footerSystems").innerHTML = Object.keys(SYSTEMS).map(name =>
     `<li><a href="#products" data-cat="${esc(name)}">${esc(name)}</a></li>`
-).join("") + `<li><a href="#brital">Brital aluminium systems</a></li>`;
+).join("") + `<li><a href="#brital">Brital aluminium systems</a></li><li><a href="#locks">Locks &amp; panic exit devices</a></li>`;
 $("#footerSystems").addEventListener("click", e => {
     const a = e.target.closest("a");
     if (a) { e.preventDefault(); showCategory(a.dataset.cat); }
@@ -1570,6 +1570,11 @@ const READER = {
             kicker: "Brital systems", title: "TB-25 Slim Sliding", size: "10 MB",
             pdf: "assets/media/brital-tb25-slim-sliding.pdf", chapters: []
         },
+        locks: {
+            kicker: "Windar brochure 2025", title: "WELKA & Antipanic", size: "0.8 MB",
+            pdf: "assets/media/windar-locks-panic-devices.pdf",
+            chapters: [["WELKA locks & cylinders", 1], ["Antipanic panic exit devices", 2], ["Panic device combinations", 3]]
+        },
         tb50: {
             kicker: "Brital systems", title: "TB-50 Minimal Folding", size: "9 MB",
             pdf: "assets/media/brital-tb50-minimal-folding.pdf", chapters: []
@@ -1791,7 +1796,7 @@ const READER = {
         $$("[data-mode]", root).forEach(b => b.setAttribute("aria-pressed", b.dataset.mode === m));
         try { localStorage.setItem("windar-reader", m); } catch (e) { /* private mode */ }
         if (!doc) return;
-        if (m === "book") { measure(); showSpread(spreadOf(keep)); }
+        if (m === "book") { measure(); showSpread(spreadOf(keep), keep); }
         else { buildScroll(); requestAnimationFrame(() => goTo(keep)); }
     }
 
@@ -1978,7 +1983,7 @@ const READER = {
     // the reader is a step in the browser history: the Back button closes it and returns to the site
     let pushed = false;
 
-    function open(k = "master", findText = "", fromHistory = false) {
+    function open(k = "master", findText = "", fromHistory = false, page = 0) {
         if (!READER.docs[k]) k = "master";
         use(k);
         if (findText && active.index) { query.value = findText; toggleSearch(true); runSearch(); }
@@ -1989,9 +1994,9 @@ const READER = {
         if (fromHistory) pushed = true;
         else if (location.hash !== hashOf(k)) { history.pushState({ reader: k }, "", hashOf(k)); pushed = true; }
         root.dataset.mode = mode;
-        if (doc) return goTo(current);
+        if (doc) return goTo(page || current);
         status.textContent = `Opening ${active.title}…`;
-        load().then(() => { status.textContent = ""; setMode(mode, 1); }).catch(() => {
+        load().then(() => { status.textContent = ""; setMode(mode, page || 1); }).catch(() => {
             loading = null;
             status.innerHTML = `This document could not be opened here. <a href="${esc(active.download || active.pdf)}" ${active.download ? 'target="_blank" rel="noopener"' : "download"}>Download the PDF (${esc(active.size)})</a>`;
         });
@@ -2014,7 +2019,7 @@ const READER = {
         const link = e.target.closest("[data-read]");
         if (!link || e.ctrlKey || e.metaKey || e.shiftKey) return;
         e.preventDefault();
-        open(link.dataset.read || "master", link.dataset.find || "");
+        open(link.dataset.read || "master", link.dataset.find || "", false, +link.dataset.page || 0);
     });
     $$("[data-close-reader]", root).forEach(el => el.addEventListener("click", () => close()));
     $$("[data-mode]", root).forEach(b => b.addEventListener("click", () => b.dataset.mode !== mode && setMode(b.dataset.mode)));
