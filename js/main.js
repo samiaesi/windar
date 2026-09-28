@@ -118,46 +118,24 @@ const PRODUCTS = [
 }));
 
 /* SALES TEAM
-   area     : what the person covers (shown on the site)
-   phone / email : direct contact — until the direct ones are known, the head office line and email are used
-   photo    : optional (e.g. "assets/img/team/ahmed-goda.jpg"); without a photo, initials are shown
-   whatsapp : true only if the phone number is a mobile that uses WhatsApp */
+   The site presents one general Windar sales team (no personal names, no Sales Director).
+   whatsapp : true only if OFFICE_PHONE is a mobile that uses WhatsApp */
 const OFFICE_PHONE = "+971 4 379 1001";
 const OFFICE_EMAIL = "info@windar.ae";
 
-const REPS = [
-    { id: "abudhabi", name: "Ahmed Goda",           title: "Sales Engineer", area: "Abu Dhabi · Al Ain",      region: "Abu Dhabi",         country: "UAE", phone: OFFICE_PHONE, email: OFFICE_EMAIL, photo: "", whatsapp: false },
-    { id: "sharjah",  name: "Muhammad Rizwan",      title: "Sales Engineer", area: "Sharjah",                 region: "Sharjah",           country: "UAE", phone: OFFICE_PHONE, email: OFFICE_EMAIL, photo: "", whatsapp: false },
-    { id: "north",    name: "Fayis Madalandakath",  title: "Sales Engineer", area: "Sharjah & Northern Emirates", region: "Northern Emirates", country: "UAE", phone: OFFICE_PHONE, email: OFFICE_EMAIL, photo: "", whatsapp: false },
-    { id: "ksa",      name: "Syed Suheil",          title: "Sales Engineer", area: "Saudi Arabia",            region: "Saudi Arabia",      country: "KSA", phone: OFFICE_PHONE, email: OFFICE_EMAIL, photo: "", whatsapp: false }
-];
+const HEAD_OFFICE = { id: "office", name: "Windar sales team", title: "Middle East head office", area: "Dubai, United Arab Emirates", phone: OFFICE_PHONE, email: OFFICE_EMAIL, photo: "", whatsapp: false };
 
-// Sales management (shown under the sales team)
-const SALES_DIRECTOR = { name: "Alfredo Saponara", title: "Sales Director", area: "Middle East", phone: OFFICE_PHONE, email: OFFICE_EMAIL, photo: "" };
-
-// Middle East head office: Dubai and the countries without a dedicated representative.
-const HEAD_OFFICE = { id: "office", name: "Windar sales team", title: "Middle East head office", area: "Dubai & other countries", region: "Dubai & Middle East", country: "UAE · Middle East", phone: OFFICE_PHONE, email: OFFICE_EMAIL, photo: "", whatsapp: false };
-
-// "Talk to sales" finder: which representative answers which country / emirate.
+// "Talk to sales" finder and the countries listed in the Sales section: all answered by the sales team.
 // country must match an option of the contact form's Country list.
 const SALES_REGIONS = [
-    { code: "AE", country: "United Arab Emirates", areas: [
-        { name: "Dubai", rep: "office" },
-        { name: "Abu Dhabi", rep: "abudhabi" },
-        { name: "Al Ain", rep: "abudhabi" },
-        { name: "Sharjah", rep: "sharjah" },
-        { name: "Ajman", rep: "north" },
-        { name: "Umm Al Quwain", rep: "north" },
-        { name: "Ras Al Khaimah", rep: "north" },
-        { name: "Fujairah", rep: "north" }
-    ] },
-    { code: "SA", country: "Saudi Arabia", rep: "ksa" },
-    { code: "KW", country: "Kuwait", rep: "office" },
-    { code: "QA", country: "Qatar", rep: "office" },
-    { code: "OM", country: "Oman", rep: "office" },
-    { code: "BH", country: "Bahrain", rep: "office" },
-    { code: "JO", country: "Jordan", rep: "office" },
-    { code: "··", country: "Other", label: "Other country", rep: "office" }
+    { code: "AE", country: "United Arab Emirates" },
+    { code: "SA", country: "Saudi Arabia" },
+    { code: "QA", country: "Qatar" },
+    { code: "OM", country: "Oman" },
+    { code: "JO", country: "Jordan" },
+    { code: "KW", country: "Kuwait" },
+    { code: "BH", country: "Bahrain" },
+    { code: "··", country: "Other", label: "Other country" }
 ];
 
 const QUOTE_EMAIL = OFFICE_EMAIL;
@@ -427,7 +405,6 @@ function avatar(person, cls = "") {
 
 /* ---------- Talk to sales: find the representative by country ---------- */
 const TIMEZONE_COUNTRY = { "Asia/Dubai": "AE", "Asia/Riyadh": "SA", "Asia/Kuwait": "KW", "Asia/Qatar": "QA", "Asia/Muscat": "OM", "Asia/Bahrain": "BH", "Asia/Amman": "JO" };
-const repById = id => REPS.find(r => r.id === id) || HEAD_OFFICE;
 const regionByCode = code => SALES_REGIONS.find(r => r.code === code);
 const waLink = (phone, text) => `https://wa.me/${phone.replace(/\D/g, "")}?text=${encodeURIComponent(text)}`;
 
@@ -438,7 +415,7 @@ function savedRegion() {
 function resolveRep(choice) {
     const region = regionByCode(choice.code);
     const area = region.areas?.find(a => a.name === choice.area);
-    return { region, area, rep: repById(area ? area.rep : region.rep) };
+    return { region, area, rep: HEAD_OFFICE };
 }
 function guessCountry() {
     try { return TIMEZONE_COUNTRY[Intl.DateTimeFormat().resolvedOptions().timeZone] || ""; } catch { return ""; }
@@ -446,10 +423,9 @@ function guessCountry() {
 
 // Button shown on every banner slide (and elsewhere with data-sales)
 function salesCtaHtml() {
-    const faces = REPS.slice(0, 3).map(r => avatar(r)).join("");
     return `
         <button class="sales-cta" data-sales>
-            <span class="sales-cta__faces" aria-hidden="true">${faces}</span>
+            <span class="sales-cta__faces sales-cta__faces--logo" aria-hidden="true"><span class="logo__mark"><i></i><i></i><i></i></span></span>
             <span class="sales-cta__text"><small>Sales team</small><strong>Talk to sales</strong></span>
             <span class="sales-cta__go" aria-hidden="true">${icon("i-arrow")}</span>
         </button>`;
@@ -1316,64 +1292,30 @@ $("#drawerList").addEventListener("click", e => {
     }
 })();
 
-/* ---------- Sales network ---------- */
-(function network() {
-    const people = [...REPS, HEAD_OFFICE];
-    const tabs = $("#regions");
-    const panel = $("#rep");
-
-    tabs.innerHTML = people.map((p, i) => `
-        <button class="region${i === 0 ? " is-active" : ""}" role="tab" aria-selected="${i === 0}" data-rep="${i}">
-            <span>${esc(p.region)}</span><small>${esc(p.country)}</small>
-        </button>`).join("");
-
-    function card(p) {
-        const face = p.id === "office" && !p.photo
-            ? `<span class="rep__photo rep__photo--logo" aria-hidden="true"><span class="logo__mark"><i></i><i></i><i></i></span></span>`
-            : avatar(p, "rep__photo");
-        return `
-            ${face}
+/* ---------- Sales team ---------- */
+(function team() {
+    const p = HEAD_OFFICE;
+    const countries = SALES_REGIONS.filter(r => r.code !== "··");
+    $("#team").innerHTML = `
+        <div class="rep team__card">
+            <span class="rep__photo rep__photo--logo" aria-hidden="true"><span class="logo__mark"><i></i><i></i><i></i></span></span>
             <div class="rep__body">
-                <span class="rep__office">${esc(p.area)}</span>
+                <span class="rep__office">${esc(p.title)} · ${esc(p.area)}</span>
                 <h3 class="rep__name">${esc(p.name)}</h3>
-                <p class="rep__role">${esc(p.title)}</p>
+                <p class="rep__role">Quotations, product choice and technical support for all our countries.</p>
                 <div class="rep__actions">
                     <a class="btn btn--blue" href="tel:${esc(p.phone.replace(/\s/g, ""))}">${icon("i-phone")}<span>${esc(p.phone)}</span></a>
-                    ${p.whatsapp ? `<a class="btn btn--wa" href="${esc(waLink(p.phone, `Hello ${p.name}, I would like information about aluminium accessories.`))}" target="_blank" rel="noopener">${icon("i-wa")}<span>WhatsApp</span></a>` : ""}
-                    <a class="btn btn--line" href="mailto:${esc(p.email)}?subject=${encodeURIComponent("For " + p.name)}">${icon("i-mail")}<span>${esc(p.email)}</span></a>
+                    ${p.whatsapp ? `<a class="btn btn--wa" href="${esc(waLink(p.phone, "Hello Windar, I would like information about aluminium accessories."))}" target="_blank" rel="noopener">${icon("i-wa")}<span>WhatsApp</span></a>` : ""}
+                    <a class="btn btn--line" href="mailto:${esc(p.email)}">${icon("i-mail")}<span>${esc(p.email)}</span></a>
+                    <button class="btn btn--dark" data-request="business">${icon("i-arrow")}<span>Send a request</span></button>
                 </div>
-            </div>`;
-    }
-    panel.innerHTML = card(people[0]);
-
-    tabs.addEventListener("click", e => {
-        const btn = e.target.closest(".region");
-        if (!btn || btn.classList.contains("is-active")) return;
-        $$(".region", tabs).forEach(r => {
-            const on = r === btn;
-            r.classList.toggle("is-active", on);
-            r.setAttribute("aria-selected", String(on));
-        });
-        panel.classList.add("is-changing");
-        setTimeout(() => {
-            panel.innerHTML = card(people[+btn.dataset.rep]);
-            panel.classList.remove("is-changing");
-        }, 250);
-    });
-
-    const d = SALES_DIRECTOR;
-    if (d && d.name) {
-        $("#director").innerHTML = `
-            ${avatar(d, "director__photo")}
-            <div class="director__text">
-                <span class="director__label">Sales management</span>
-                <strong>${esc(d.name)}</strong>
-                <span>${esc(d.title)} · ${esc(d.area)}</span>
             </div>
-            <a class="btn btn--line" href="mailto:${esc(d.email)}?subject=${encodeURIComponent("For " + d.name + ", " + d.title)}">${icon("i-mail")} Contact the Sales Director</a>`;
-    } else {
-        $("#director").hidden = true;
-    }
+        </div>
+        <div class="team__countries">
+            <span class="team__label">Countries we serve</span>
+            <ul>${countries.map(c => `<li><b>${esc(c.code)}</b>${esc(c.country)}</li>`).join("")}</ul>
+            <p>Another country? Contact us: our team will direct your request.</p>
+        </div>`;
 })();
 
 document.addEventListener("keydown", e => {
@@ -1485,7 +1427,6 @@ document.addEventListener("click", e => {
         if (type === "business" && d.get("project")) lines.push(`Project: ${d.get("project")}`);
         if (type === "technical" && d.get("system")) lines.push(`Aluminium system: ${d.get("system")}`);
         if (type === "technical" && d.get("reference")) lines.push(`Product reference: ${d.get("reference")}`);
-        if (rep && rep.id !== "office") lines.push(`Sales contact: ${rep.name} (${rep.area})`);
         lines.push("");
         if (items.length) lines.push("Products:", ...items.map(p => `- ${p.ref}  ${p.name}`), "");
         lines.push(d.get("message"));

@@ -41,7 +41,7 @@ then http://localhost:8000. The catalogue reader needs a server (it does not wor
 | 05 | Certified quality | MASTER Italy certifications (real documents only). |
 | 06 | Reference projects | Projects by country with details. |
 | 07 | News & events | Big 5 Dubai / Big 5 Saudi with countdown, add-to-calendar, meeting booking; product news. |
-| 08 | Sales network | Sales engineers by region, Sales Director. |
+| 08 | Sales team | One general Windar sales team (no personal names), contact buttons and the countries served. |
 | 09 | Contact | Business / technical request form, then the footer. |
 
 ## Where to edit content
@@ -52,7 +52,7 @@ All content lists are at the top of `js/main.js`:
 - `SYSTEMS` / `PRODUCTS` — product categories and references
 - `PROJECTS` — reference projects
 - `EVENTS` — exhibitions (they also appear in the banner automatically until they end)
-- `OFFICE_PHONE`, `OFFICE_EMAIL`, `REPS`, `SALES_DIRECTOR`, `SALES_REGIONS` — contacts and who covers which country / emirate
+- `OFFICE_PHONE`, `OFFICE_EMAIL`, `HEAD_OFFICE`, `SALES_REGIONS` — the sales team contact and the countries served (also the "Talk to sales" list)
 - `CONTACT`, `WHATSAPP`, `ABOUT_VIDEO` — form recipients and form service, WhatsApp number, company video.
   The form is sent directly through Formspree (`CONTACT.endpoint`, form "Windar website" of the account info@windar.ae;
   free plan with a monthly limit of submissions). Empty endpoint = the visitor's email application opens instead.
@@ -94,7 +94,7 @@ A new Brital brochure: `python tools/build_catalogue.py "Brochure.pdf" --brochur
 
 ## Still to provide before going live
 
-- Direct phone / email / photos of the sales engineers, and the WhatsApp number
+- The WhatsApp number of the sales team
 - Confirm the product selection (39 references from the MASTER catalogue) and mark the best sellers
 - Real photos of the reference projects (and the cities for Kuwait)
 - MASTER Italy stand numbers at Big 5 Dubai and Big 5 Saudi

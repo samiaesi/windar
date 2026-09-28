@@ -2868,3 +2868,26 @@ html.reader-open, html.reader-open body { overflow: hidden; }
     .about__facts strong { font-size: 22px; }
     .about__facts li { padding-right: 10px; }
 }
+
+/* Sales: one general team + the countries served */
+.team { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); gap: 20px; }
+.team__card { grid-template-columns: 150px 1fr; }
+.team__card .rep__name { margin-top: 6px; }
+.team__card .rep__role { margin-bottom: 22px; }
+.team__countries { padding: 28px; border-radius: var(--r-lg); background: var(--white); border: 1px solid var(--line); }
+.team__label { font-family: var(--mono); font-size: 12px; letter-spacing: .05em; text-transform: uppercase; color: var(--blue); }
+.team__countries ul { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 16px; margin: 18px 0; padding: 0; list-style: none; }
+.team__countries li { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 500; color: var(--graphite); }
+.team__countries b { display: inline-grid; place-items: center; min-width: 34px; height: 24px; padding: 0 6px; border-radius: 6px; background: var(--blue-soft); color: var(--blue); font: 500 11.5px var(--mono); }
+.team__countries p { margin: 0; font-size: 13.5px; color: var(--muted); }
+.sales-cta__faces--logo { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 50%; background: var(--graphite); border: 2px solid rgba(255, 255, 255, .25); }
+.sales-cta__faces--logo .logo__mark { grid-template-columns: repeat(2, 5px); grid-template-rows: repeat(3, 5px); margin: 0; }
+.sales-cta__faces--logo .logo__mark i { background: #7c86ff; }
+@media (max-width: 960px) {
+    .team { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+    .team__card { grid-template-columns: 1fr; gap: 18px; }
+    .team__card .rep__photo { width: 84px; }
+    .team__countries { padding: 22px; }
+}
