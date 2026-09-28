@@ -1581,6 +1581,16 @@ const READER = {
                 return /^\d+$/.test(t) && +t >= 116 && +t <= 130 ? +t - 114 : null;
             }
         },
+        antipanic: {
+            kicker: "Antipanic · catalogue pages", title: "Rim panic exit devices", size: "1.4 MB",
+            pdf: "assets/media/antipanic-panic-exit-devices.pdf",
+            chapters: [["modulo cross bar 401T–403T", 1], ["modulo-push touch bar 601–603", 4], ["Horizontal cross arm 1100", 10],
+                       ["Rods and latches kits 450T", 11], ["Outside access device 1090", 12]],
+            // official Antipanic catalogue pages, numbered as printed in the Antipanic catalogue
+            printed: [25, 26, 27, 64, 65, 66, 67, 68, 69, 100, 101, 120],
+            label(n) { return String(this.printed[n - 1] || n); },
+            pageOf(text) { const i = this.printed.indexOf(+String(text).trim().replace(/^p\.?\s*/i, "")); return i < 0 ? null : i + 1; }
+        },
         locks: {
             kicker: "Windar brochure 2025", title: "WELKA & Antipanic", size: "0.8 MB",
             pdf: "assets/media/windar-locks-panic-devices.pdf",

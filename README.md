@@ -64,7 +64,7 @@ If you change what the site collects or which outside services it uses (e.g. add
 ## Catalogue reader
 
 Any link with `data-read="<key>"` opens a document of `READER.docs` inside the site:
-`master` (MASTER technical catalogue), `tb25` and `tb50` (Brital brochures), `locks` (WELKA & Antipanic product sheet), `welka` (WELKA catalogue, keys and cylinders, printed pages 116-130). `data-page="2"` opens a document at a given page.
+`master` (MASTER technical catalogue), `tb25` and `tb50` (Brital brochures), `locks` (WELKA & Antipanic product sheet), `welka` (WELKA catalogue, keys and cylinders, printed pages 116-130), `antipanic` (official Antipanic catalogue pages of the products sold by Windar, downloaded from antipanic.it: 401T-403T, 601-603, 1100, 450T kits, 1090; the page of the 455 kits is not published separately). `data-page="2"` opens a document at a given page.
 A shared link `…/#catalogue` (or `#catalogue-tb25`, `#catalogue-tb50`) opens it directly.
 
 - **Book** view (pages that turn, double pages on a computer, one page on a phone) or **Scroll** view (with zoom). The choice is remembered.
