@@ -2944,3 +2944,123 @@ html.reader-open, html.reader-open body { overflow: hidden; }
     .form__row { grid-template-columns: 1fr; gap: 0; }
     .rtype__card small { display: none; }
 }
+
+/* ---------- Certified quality v2: one calm style, three clear parts ---------- */
+.quality { --q-card: rgba(255, 255, 255, .045); --q-line: rgba(255, 255, 255, .1); --q-accent: #aab1ff; }
+.q2-title { margin: 56px 0 18px; font-family: var(--mono); font-size: 12.5px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--q-accent); }
+.q2-title:first-of-type { margin-top: 8px; }
+.q2-label { display: block; font-family: var(--mono); font-size: 11.5px; letter-spacing: .05em; text-transform: uppercase; color: rgba(255, 255, 255, .5); }
+.q2-btn { display: inline-flex; align-items: center; gap: 8px; margin-top: auto; font-size: 14px; font-weight: 600; color: var(--q-accent); }
+.q2-btn svg { width: 14px; height: 14px; }
+
+/* certificates as sheets */
+.q2-certs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.q2-cert {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 30px 24px 26px;
+    border-radius: var(--r-lg);
+    background: var(--q-card);
+    border: 1px solid var(--q-line);
+    text-align: center;
+    transition: border-color .25s, background .25s, transform .25s var(--ease);
+}
+.q2-cert:hover { border-color: rgba(170, 177, 255, .5); background: rgba(255, 255, 255, .07); transform: translateY(-3px); }
+.q2-seal {
+    display: grid;
+    place-items: center;
+    align-content: center;
+    width: 104px;
+    height: 104px;
+    margin-bottom: 8px;
+    border-radius: 50%;
+    border: 1.5px solid var(--q-accent);
+    box-shadow: inset 0 0 0 5px var(--graphite), inset 0 0 0 6px rgba(170, 177, 255, .45);
+    color: var(--white);
+    line-height: 1.05;
+}
+.q2-seal small { font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em; color: var(--q-accent); }
+.q2-seal strong { font-size: 27px; font-weight: 700; letter-spacing: -.02em; }
+.q2-cert__title { font-size: 18px; font-weight: 600; color: var(--white); }
+.q2-cert__meta { font-size: 13.5px; line-height: 1.5; color: rgba(255, 255, 255, .55); margin-bottom: 6px; }
+.q2-also { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 26px; margin: 22px 0 0; padding: 0; list-style: none; }
+.q2-also li { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: rgba(255, 255, 255, .72); }
+.q2-also svg { width: 15px; height: 15px; color: var(--q-accent); }
+
+/* MasterLab */
+.q2-lab {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr);
+    gap: 40px;
+    padding: 34px;
+    border-radius: var(--r-lg);
+    background: var(--q-card);
+    border: 1px solid var(--q-line);
+}
+.q2-lab__intro { display: flex; flex-direction: column; gap: 14px; }
+.q2-lab__lead { margin: 0; font-size: 26px; line-height: 1.2; letter-spacing: -.02em; font-weight: 600; color: var(--white); }
+.q2-lab__lead em { font-family: var(--serif); font-weight: 400; color: var(--q-accent); }
+.q2-figures { display: flex; gap: 34px; margin: 6px 0 10px; }
+.q2-figures dd { margin: 0; font-size: 40px; font-weight: 600; letter-spacing: -.03em; color: var(--white); line-height: 1; }
+.q2-figures dt { margin-top: 6px; font-size: 13px; color: rgba(255, 255, 255, .55); max-width: 150px; }
+.q2-tests { display: grid; grid-template-columns: 1fr 1fr; gap: 0 28px; margin: 0; padding: 0; list-style: none; align-content: center; }
+.q2-tests li { display: grid; gap: 3px; padding: 14px 0; border-bottom: 1px solid var(--q-line); }
+.q2-tests li:nth-last-child(-n+2) { border-bottom: 0; }
+.q2-tests span { font-size: 15px; color: var(--white); }
+.q2-tests code { font-family: var(--mono); font-size: 12px; color: var(--q-accent); }
+
+/* test reports */
+.q2-reports { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.q2-report {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 28px;
+    border-radius: var(--r-lg);
+    background: var(--q-card);
+    border: 1px solid var(--q-line);
+    transition: border-color .25s, background .25s;
+}
+.q2-report:hover { border-color: rgba(170, 177, 255, .5); background: rgba(255, 255, 255, .07); }
+.q2-report h4 { margin: 4px 0 0; font-size: 22px; letter-spacing: -.02em; color: var(--white); }
+.q2-sub { margin: 0; font-size: 14px; color: rgba(255, 255, 255, .55); }
+.q2-grades { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 10px; margin: 10px 0 4px; }
+.q2-grades div { padding: 12px 14px; border-radius: 10px; background: rgba(255, 255, 255, .06); }
+.q2-grades dt { font-size: 12px; color: rgba(255, 255, 255, .55); }
+.q2-grades dd { margin: 4px 0 0; font-size: 18px; font-weight: 600; color: var(--white); }
+.q2-std { margin: 0 0 10px; font-family: var(--mono); font-size: 12px; color: rgba(255, 255, 255, .5); }
+.q2-all {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-top: 18px;
+    padding: 18px 24px;
+    border-radius: var(--r-lg);
+    border: 1px dashed rgba(255, 255, 255, .2);
+    color: rgba(255, 255, 255, .6);
+    font-size: 13.5px;
+    transition: border-color .25s;
+}
+.q2-all strong { display: block; margin-bottom: 2px; font-size: 15px; color: var(--white); }
+.q2-all svg { flex: none; width: 18px; height: 18px; color: var(--q-accent); }
+.q2-all:hover { border-color: var(--q-accent); }
+@media (max-width: 960px) {
+    .q2-certs { grid-template-columns: 1fr; }
+    .q2-cert { flex-direction: row; flex-wrap: wrap; text-align: left; align-items: center; column-gap: 18px; padding: 20px; }
+    .q2-seal { width: 76px; height: 76px; margin: 0; }
+    .q2-seal strong { font-size: 20px; }
+    .q2-cert__title, .q2-cert__meta { flex: 1 1 calc(100% - 100px); }
+    .q2-cert__title { align-self: end; }
+    .q2-lab { grid-template-columns: 1fr; gap: 24px; padding: 24px; }
+    .q2-reports { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+    .q2-tests { grid-template-columns: 1fr; }
+    .q2-tests li:nth-last-child(2) { border-bottom: 1px solid var(--q-line); }
+    .q2-also { justify-content: flex-start; }
+    .q2-figures dd { font-size: 32px; }
+}
+.q2-grades dd { white-space: nowrap; font-size: 17px; }
